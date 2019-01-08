@@ -1,6 +1,7 @@
 package com.example.android.groupchatapp;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telecom.Call;
@@ -34,12 +35,7 @@ public class SignUpActivity extends AppCompatActivity {
         String pwd = password.getText().toString().trim();
         String confirm = confirm_password.getText().toString().trim();
 
-        /*if(pwd!=confirm){
-            progressDialog.dismiss();
-            password.setError("Both passwords should match");
-            password.requestFocus();
-            return;
-        }*/
+
         ApiInterface apiInterface =ApiClient.ApiClient().create(ApiInterface.class);
         ModelSignUp modelSignUp=new ModelSignUp(emailId,user,pwd,confirm);
        retrofit2.Call<ModelSignUp> call=apiInterface.Register(modelSignUp);
@@ -48,7 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
            @Override
            public void onResponse(retrofit2.Call<ModelSignUp> call, Response<ModelSignUp> response) {
                progressDialog.dismiss();
-             Toast.makeText(SignUpActivity.this,"Successfull",Toast.LENGTH_SHORT).show();
+             Toast.makeText(SignUpActivity.this,"Successful",Toast.LENGTH_SHORT).show();
            }
 
            @Override
@@ -57,5 +53,10 @@ public class SignUpActivity extends AppCompatActivity {
                Toast.makeText(SignUpActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
            }
        });
+    }
+
+    public void login(View v){
+        Intent intent =new Intent(SignUpActivity.this,LoginActivity.class);
+        startActivity(intent);
     }
 }

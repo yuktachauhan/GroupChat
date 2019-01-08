@@ -9,6 +9,7 @@ public class ModelLogin {
     @SerializedName("password")
     private String password;
 
+
     public ModelLogin(String username,String password){
         this.username=username;
         this.password=password;

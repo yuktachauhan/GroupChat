@@ -9,6 +9,9 @@ public interface ApiInterface {
     @POST(" ")
     Call<ModelSignUp>  Register(@Body ModelSignUp modelSignUp);
 
-    @POST("api-token-auth/")
+    @POST("login/")
     Call<ModelLogin> Login(@Body ModelLogin modelLogin);
+
+    @POST("api-token-auth/")
+    Call<ModelToken> Token(@Body ModelToken modelToken);
 }
