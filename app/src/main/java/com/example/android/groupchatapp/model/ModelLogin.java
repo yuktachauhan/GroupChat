@@ -1,4 +1,4 @@
-package com.example.android.groupchatapp;
+package com.example.android.groupchatapp.model;
 
 import com.google.gson.annotations.SerializedName;
 

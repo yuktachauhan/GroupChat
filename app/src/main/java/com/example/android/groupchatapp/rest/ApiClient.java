@@ -1,4 +1,4 @@
-package com.example.android.groupchatapp;
+package com.example.android.groupchatapp.rest;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "";
+    public static final String BASE_URL = "";  //http://b10c904a.ngrok.io";
     private static Retrofit retrofit=null;
 
 

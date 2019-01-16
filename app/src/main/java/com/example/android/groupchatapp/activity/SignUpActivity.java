@@ -1,13 +1,17 @@
-package com.example.android.groupchatapp;
+package com.example.android.groupchatapp.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.android.groupchatapp.rest.ApiClient;
+import com.example.android.groupchatapp.rest.ApiInterface;
+import com.example.android.groupchatapp.model.ModelSignUp;
+import com.example.android.groupchatapp.R;
 
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +39,9 @@ public class SignUpActivity extends AppCompatActivity {
         String pwd = password.getText().toString().trim();
         String confirm = confirm_password.getText().toString().trim();
 
+        if(!pwd.contentEquals(confirm)){
+            password.setError("passwords should match");
+        }
 
         ApiInterface apiInterface =ApiClient.ApiClient().create(ApiInterface.class);
         ModelSignUp modelSignUp=new ModelSignUp(emailId,user,pwd,confirm);
@@ -44,7 +51,10 @@ public class SignUpActivity extends AppCompatActivity {
            @Override
            public void onResponse(retrofit2.Call<ModelSignUp> call, Response<ModelSignUp> response) {
                progressDialog.dismiss();
+               if(response.isSuccessful())
              Toast.makeText(SignUpActivity.this,"Successful",Toast.LENGTH_SHORT).show();
+               else
+                   Toast.makeText(SignUpActivity.this,"Something went wrong",Toast.LENGTH_SHORT);
            }
 
            @Override
