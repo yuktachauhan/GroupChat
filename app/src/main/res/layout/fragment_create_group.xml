@@ -31,13 +31,15 @@
         android:id="@+id/group_profile_choose_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose Profile"/>
+        android:text="Choose Profile"
+        />
 
     <Button
         android:id="@+id/group_profile_create_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Group"
+        android:onClick="createGroup"
         android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
