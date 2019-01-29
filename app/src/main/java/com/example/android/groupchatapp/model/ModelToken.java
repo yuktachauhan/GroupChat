@@ -12,6 +12,10 @@ public class ModelToken {
     @SerializedName("token")
     private String Token;
 
+    public ModelToken(){
+
+    }
+
     public ModelToken(String username,String password){
         this.username=username;
         this.password=password;

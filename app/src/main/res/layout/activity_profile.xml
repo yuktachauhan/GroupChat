@@ -19,19 +19,6 @@
             android:layout_gravity="center_horizontal"
             />
 
-        <TextView
-            android:id="@+id/Choose_profile"
-            android:text="Choose Profile"
-            android:textSize="18dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <Button
-            android:id="@+id/profile_button"
-            android:onClick="selectImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Browse"/>
 
         <EditText
             android:id="@+id/Name"
@@ -47,13 +34,6 @@
             android:layout_height="wrap_content"
             />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Create Profile"
-            android:onClick="createProfile"
-            />
 
         <Button
             android:layout_width="wrap_content"
@@ -61,6 +41,22 @@
             android:text="camera"
             android:layout_gravity="center_horizontal"
             android:onClick="capturePhoto"/>
+
+        <TextView
+            android:id="@+id/Choose_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Profile"
+            android:textSize="18dp" />
+
+        <Button
+            android:id="@+id/profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:onClick="selectImage"
+            android:text="Browse" />
+
 
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.example.android.groupchatapp.activity;
+package com.example.android.groupchatapp.fragment;
 
 import android.support.v4.app.Fragment;
 

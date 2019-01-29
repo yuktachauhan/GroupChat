@@ -1,13 +1,17 @@
 package com.example.android.groupchatapp.activity;
 
-import android.app.Activity;
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.groupchatapp.Controller;
 import com.example.android.groupchatapp.R;
-import com.example.android.groupchatapp.model.ModelLogin;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
@@ -26,26 +30,46 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import retrofit2.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.support.v4.content.CursorLoader;
 
 public class ProfileActivity extends AppCompatActivity {
     ImageView profile;
     EditText name, number;
-    String username,phone_number;
+    String username, phone_number;
     final static int GALLERY_REQUEST_CODE = 1;
     final static int CAMERA_REQUEST_CODE = 0;
     Uri imageUri;
+    Bitmap selectedImage;
+    InputStream imageStream;
+    // Controller mController;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        //checking the permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + getPackageName()));
+            finish();
+            startActivity(intent);
+            return;
+        }
+
         profile = (ImageView) findViewById(R.id.profile);
         name = (EditText) findViewById(R.id.Name);
         number = (EditText) findViewById(R.id.phoneNumber);
+        //mController =(Controller) getApplicationContext();
     }
 
     //to select image from gallery
@@ -53,7 +77,8 @@ public class ProfileActivity extends AppCompatActivity {
     public void selectImage(View view) {
         Intent pickImage = new Intent(Intent.ACTION_PICK);
         pickImage.setType("image/*");
-        if (pickImage.resolveActivity(getPackageManager()) != null) {//we check that at least one app is there to perform our action,if no app was there
+        if (pickImage.resolveActivity(getPackageManager()) != null) {
+            //we check that at least one app is there to perform our action,if no app was there
             startActivityForResult(pickImage, GALLERY_REQUEST_CODE);
             //then because we check our app will not crash
 
@@ -75,18 +100,17 @@ public class ProfileActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 try {
-                     imageUri = data.getData();
-                    //File imageFile =  new File(getRealPathFromURI(imageUri));
-                    //createProfile();
+                    imageUri = data.getData();
 
-                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    imageStream = getContentResolver().openInputStream(imageUri);
                     //InputStream: The input stream that holds the raw data to be decoded into a bitmap.
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    selectedImage = BitmapFactory.decodeStream(imageStream);
 
-
+                     createProfile();
                     //decode stream: Decode an input stream into a bitmap.
                     //BitmapFactory Creates Bitmap objects from various sources,including files, streams, and byte-arrays.
-                    profile.setImageBitmap(selectedImage);
+
+
 
 
                 } catch (FileNotFoundException e) {
@@ -95,8 +119,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
 
-        }
-       else if (requestCode == CAMERA_REQUEST_CODE) {
+        } else if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -108,42 +131,51 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    public void createProfile(View view) {
+    public void createProfile() {
         final ProgressDialog progressDialog = new ProgressDialog(ProfileActivity.this);
-        progressDialog.setMessage("Logging in...");
+        progressDialog.setMessage("Loading...");
         progressDialog.show();
+
         String Name = name.getText().toString().trim();
         String phone_number = number.getText().toString().trim();
 
-            ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
+        File file = new File(getRealPathFromURI(imageUri));
+        RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        RequestBody my_name=RequestBody.create(MediaType.parse("text/plain"),Name);
 
-            ModelProfile modelProfile = new ModelProfile(Name,phone_number);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
 
-            //Log.i("getRealPathFromURI(Uri)",getRealPathFromURI(imageUri));
+        ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
+
+        final ModelProfile modelProfile = new ModelProfile(Name, phone_number);
 
 
-            retrofit2.Call<ModelProfile> call = apiInterface.profile(LoginActivity.getUser_id(),modelProfile,"JWT "+LoginActivity.getToken());
+        retrofit2.Call<ResponseBody> call = apiInterface.profile(LoginActivity.getUser_id(),
+                fileToUpload, my_name,modelProfile.getPhone_number()
+                , "JWT " + LoginActivity.getToken());
 
 
-            call.enqueue(new Callback<ModelProfile>() {
-                @Override
-                public void onResponse(retrofit2.Call<ModelProfile> call, Response<ModelProfile> response) {
-                    progressDialog.dismiss();
-                    Toast.makeText(ProfileActivity.this,"Profile created",Toast.LENGTH_LONG).show();
-                }
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+                progressDialog.dismiss();
+                profile.setImageBitmap(selectedImage);
+                Toast.makeText(ProfileActivity.this, modelProfile.getName()+modelProfile.getPhone_number()
+                        , Toast.LENGTH_LONG).show();
+            }
 
-                @Override
-                public void onFailure(retrofit2.Call<ModelProfile> call, Throwable t) {
-                    progressDialog.dismiss();
-                    Toast.makeText(ProfileActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
-                }
-            });
+            @Override
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-   /* private String getRealPathFromURI(Uri contentURI) {
+    private String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
+        if (cursor == null) {
             result = contentURI.getPath();
         } else {
             cursor.moveToFirst();
@@ -153,42 +185,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
         return result;
     }
-*/
-
-
-  /*  public void profileUpload(){
-        final ProgressDialog progressDialog = new ProgressDialog(ProfileActivity.this);
-        progressDialog.setMessage("Logging in...");
-        progressDialog.show();
-
-        username = name.getText().toString().trim();
-        phone_number= number.getText().toString().trim();
-
-        ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
-
-        ModelProfile modelProfile = new ModelProfile(username,getRealPathFromURI(imageUri),phone_number);
-
-        Call<ModelProfile> call=apiInterface.profile(modelProfile);
-
-        call.enqueue(new Callback<ModelProfile>() {
-            @Override
-            public void onResponse(Call<ModelProfile> call, Response<ModelProfile> response) {
-                progressDialog.dismiss();
-                Log.i("LoginActivity","ON RESPONSE IS CALLED");
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<ModelProfile> call, Throwable t) {
-                progressDialog.dismiss();
-                Log.i("LoginActivity","ON FAILURE IS CALLED");
-                Toast.makeText(ProfileActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }*/
 }
 
 /***

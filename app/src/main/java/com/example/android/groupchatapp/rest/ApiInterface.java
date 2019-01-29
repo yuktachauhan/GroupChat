@@ -1,26 +1,29 @@
 package com.example.android.groupchatapp.rest;
 
-import com.example.android.groupchatapp.activity.LoginActivity;
 import com.example.android.groupchatapp.model.ModelLogin;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.model.ModelSignUp;
 import com.example.android.groupchatapp.model.ModelToken;
 
+import java.io.File;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
-
 
 
 public interface ApiInterface {
 
 
-    @POST("api/register/")
+    @POST("")
     Call<ModelSignUp>  Register(@Body ModelSignUp modelSignUp);
 
     @POST("login/")
@@ -32,8 +35,15 @@ public interface ApiInterface {
     @POST("verify/")
     Call<ResponseBody> Authentication(@Header("Authorization") String token);
 
-    @PUT("profile/{id}")
-    Call<ModelProfile> profile(@Path("id") int id, @Body ModelProfile modelProfile, @Header("Authorization") String authHeader);
+    @Multipart
+    @POST("creategroup/")
+    Call<ResponseBody> createGroup(@Part MultipartBody.Part file,@Part("name") RequestBody name,@Header("Authorization") String authHeader);
+
+
+    @Multipart
+    @PUT("profile/{id}/")
+    Call<ResponseBody> profile(@Path("id") int id, @Part MultipartBody.Part file , @Part("name") RequestBody name,@Part("phone_number")
+                               String phone, @Header("Authorization") String authHeader);
 
 
 

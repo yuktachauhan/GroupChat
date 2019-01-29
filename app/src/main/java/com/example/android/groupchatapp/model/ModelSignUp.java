@@ -16,6 +16,8 @@ public class ModelSignUp {
     @SerializedName("confirm_password")
     private String confirm_password;
 
+    public ModelSignUp(){}
+
     public ModelSignUp(String email,String username,String password,String confirm_password){
         this.email=email;
         this.username=username;
