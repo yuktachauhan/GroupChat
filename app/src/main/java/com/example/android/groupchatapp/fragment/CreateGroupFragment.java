@@ -1,6 +1,5 @@
 package com.example.android.groupchatapp.fragment;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,6 +11,7 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.activity.LoginActivity;
-import com.example.android.groupchatapp.activity.ProfileActivity;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
@@ -30,7 +29,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -49,7 +47,7 @@ public class CreateGroupFragment extends Fragment {
     InputStream imageStream;
     Bitmap selectedImage;
 
-@Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
     View view= inflater.inflate(R.layout.fragment_create_group,container,false);
 
@@ -163,21 +161,27 @@ public class CreateGroupFragment extends Fragment {
 
         String name = group_name.getText().toString().trim();
 
-        File file=new File(getRealPathFromURI(imageUri));
+        File file = new File(getRealPathFromURI(imageUri));
         RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         RequestBody my_name=RequestBody.create(MediaType.parse("text/plain"),name);
 
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
 
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-        retrofit2.Call<ResponseBody> call=apiInterface.createGroup(fileToUpload,my_name,LoginActivity.getToken());
+        retrofit2.Call<ResponseBody> call=apiInterface.createGroup(fileToUpload,my_name,"JWT " + LoginActivity.getToken());
+
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
                 progressDialog.dismiss();
-                Toast.makeText(activity,"group created",Toast.LENGTH_SHORT).show();
-                group_image.setImageBitmap(selectedImage);
+                if (response.isSuccessful()) {
+                    Toast.makeText(activity, "group created", Toast.LENGTH_SHORT).show();
+                    group_image.setImageBitmap(selectedImage);
+
+                }else{
+                    Toast.makeText(activity,"some error occured",Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -204,6 +208,5 @@ public class CreateGroupFragment extends Fragment {
         }
         return result;
     }
-
 
 }

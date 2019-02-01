@@ -1,5 +1,6 @@
 package com.example.android.groupchatapp.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,10 +14,17 @@ import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.fragment.CreateGroupFragment;
+import com.example.android.groupchatapp.rest.ApiClient;
+import com.example.android.groupchatapp.rest.ApiInterface;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
-   private DrawerLayout drawerLayout;
-   private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
 
     @Override
@@ -24,17 +32,17 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,new CreateGroupFragment()).commit();
-
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-   /*
-    *Enable the app bar's "home" button by calling setDisplayHomeAsUpEnabled(true),
-   * and then change it to use the menu icon by calling setHomeAsUpIndicator(int), as shown here:
-   * */
+
+        /*
+         *Enable the app bar's "home" button by calling setDisplayHomeAsUpEnabled(true),
+         * and then change it to use the menu icon by calling setHomeAsUpIndicator(int), as shown here:
+         * */
+
         drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView) findViewById(R.id.nav_view);
 
@@ -51,11 +59,38 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
                 if(menuItem.getItemId()==R.id.create_group){
-                    Toast.makeText(HomeActivity.this,"Group Created",Toast.LENGTH_SHORT).show();
+                    getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,new CreateGroupFragment())
+                            .addToBackStack(null).commit();
                 }
 
                 if(menuItem.getItemId()==R.id.logout){
-                    Toast.makeText(HomeActivity.this,"logout",Toast.LENGTH_SHORT).show();
+
+                    final ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
+                    progressDialog.setMessage("Logging Out");
+                    progressDialog.show();
+
+                    ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
+                    Call<ResponseBody> call =apiInterface.logOut("JWT " + LoginActivity.getToken());
+
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            progressDialog.dismiss();
+                            if (response.isSuccessful()) {
+                                Toast.makeText(HomeActivity.this, "Logout", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            }else{
+                                Toast.makeText(HomeActivity.this, "not logout", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            progressDialog.dismiss();
+                         Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
                 return true;
@@ -69,7 +104,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-               drawerLayout.openDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
         return super.onOptionsItemSelected(item);

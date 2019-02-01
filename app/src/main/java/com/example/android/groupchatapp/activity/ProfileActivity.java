@@ -25,6 +25,7 @@ import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,6 +35,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.support.v4.content.CursorLoader;
@@ -41,21 +43,23 @@ import android.support.v4.content.CursorLoader;
 public class ProfileActivity extends AppCompatActivity {
     ImageView profile;
     EditText name, number;
-    String username, phone_number;
     final static int GALLERY_REQUEST_CODE = 1;
-    final static int CAMERA_REQUEST_CODE = 0;
     Uri imageUri;
-    Bitmap selectedImage;
-    InputStream imageStream;
-    // Controller mController;
-
+    //Bitmap selectedImage;
+    //InputStream imageStream;
+    Controller mController;
+    String Name,phoneNumber;
+    ModelProfile modelProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        //checking the permission
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //checking the permission of mobile storage access
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -69,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
         profile = (ImageView) findViewById(R.id.profile);
         name = (EditText) findViewById(R.id.Name);
         number = (EditText) findViewById(R.id.phoneNumber);
-        //mController =(Controller) getApplicationContext();
+        mController =(Controller) getApplicationContext();
     }
 
     //to select image from gallery
@@ -81,32 +85,22 @@ public class ProfileActivity extends AppCompatActivity {
             //we check that at least one app is there to perform our action,if no app was there
             startActivityForResult(pickImage, GALLERY_REQUEST_CODE);
             //then because we check our app will not crash
-
         }
     }
-
-    //to take picture with the help of camera and display in image view
-    public void capturePhoto(View view) {
-        Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (captureImage.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(captureImage, CAMERA_REQUEST_CODE);
-        }
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                try {
-                    imageUri = data.getData();
+                imageUri = data.getData();
+                createProfile();
 
-                    imageStream = getContentResolver().openInputStream(imageUri);
+                    /*imageStream = getContentResolver().openInputStream(imageUri);
                     //InputStream: The input stream that holds the raw data to be decoded into a bitmap.
                     selectedImage = BitmapFactory.decodeStream(imageStream);
 
-                     createProfile();
+
                     //decode stream: Decode an input stream into a bitmap.
                     //BitmapFactory Creates Bitmap objects from various sources,including files, streams, and byte-arrays.
 
@@ -116,17 +110,11 @@ public class ProfileActivity extends AppCompatActivity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Toast.makeText(ProfileActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                }
-            }
+                }*/
 
-        } else if (requestCode == CAMERA_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                profile.setImageBitmap(imageBitmap);
-            }
-        } else {
+            } /*else {
             Toast.makeText(ProfileActivity.this, "You haven't picked Image", Toast.LENGTH_LONG).show();
+        }*/
         }
     }
 
@@ -136,8 +124,8 @@ public class ProfileActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        String Name = name.getText().toString().trim();
-        String phone_number = number.getText().toString().trim();
+         Name = name.getText().toString().trim();
+         phoneNumber = number.getText().toString().trim();
 
         File file = new File(getRealPathFromURI(imageUri));
         RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -147,7 +135,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
 
-        final ModelProfile modelProfile = new ModelProfile(Name, phone_number);
+         modelProfile = new ModelProfile(Name, phoneNumber);
 
 
         retrofit2.Call<ResponseBody> call = apiInterface.profile(LoginActivity.getUser_id(),
@@ -158,10 +146,11 @@ public class ProfileActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
-                progressDialog.dismiss();
-                profile.setImageBitmap(selectedImage);
-                Toast.makeText(ProfileActivity.this, modelProfile.getName()+modelProfile.getPhone_number()
-                        , Toast.LENGTH_LONG).show();
+               if(response.isSuccessful()) {
+                   getProfile();
+               }else{
+                   Toast.makeText(ProfileActivity.this,"Something went wrong.",Toast.LENGTH_SHORT).show();
+               }
             }
 
             @Override
@@ -185,6 +174,44 @@ public class ProfileActivity extends AppCompatActivity {
         }
         return result;
     }
+
+  public void getProfile(){
+      final ProgressDialog progressDialog = new ProgressDialog(ProfileActivity.this);
+      progressDialog.setMessage("Loading...");
+      progressDialog.show();
+
+      ApiInterface apiInterface =ApiClient.ApiClient().create(ApiInterface.class);
+
+      Call<ModelProfile> call =apiInterface.getProfile(LoginActivity.getUser_id(),"JWT " + LoginActivity.getToken());
+
+      call.enqueue(new Callback<ModelProfile>() {
+          @Override
+          public void onResponse(Call<ModelProfile> call, Response<ModelProfile> response) {
+              progressDialog.dismiss();
+
+              if(response.isSuccessful()) {
+
+                  String imageUrl = modelProfile.getAvatar();
+                  Picasso.with(ProfileActivity.this).load(imageUrl).fit().centerCrop().into(profile);
+
+                  name.setText(modelProfile.getName());
+                  number.setText(modelProfile.getPhone_number());
+
+              }
+
+
+          }
+
+          @Override
+          public void onFailure(Call<ModelProfile> call, Throwable t) {
+
+              progressDialog.dismiss();
+              Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+          }
+      });
+
+
+  }
 }
 
 /***

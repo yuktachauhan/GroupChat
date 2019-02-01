@@ -12,6 +12,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -23,7 +24,7 @@ import retrofit2.http.Path;
 public interface ApiInterface {
 
 
-    @POST("")
+    @POST(" ")
     Call<ModelSignUp>  Register(@Body ModelSignUp modelSignUp);
 
     @POST("login/")
@@ -37,7 +38,7 @@ public interface ApiInterface {
 
     @Multipart
     @POST("creategroup/")
-    Call<ResponseBody> createGroup(@Part MultipartBody.Part file,@Part("name") RequestBody name,@Header("Authorization") String authHeader);
+    Call<ResponseBody> createGroup(@Part MultipartBody.Part file,@Part("name") RequestBody name, @Header("Authorization") String authHeader);
 
 
     @Multipart
@@ -45,6 +46,10 @@ public interface ApiInterface {
     Call<ResponseBody> profile(@Path("id") int id, @Part MultipartBody.Part file , @Part("name") RequestBody name,@Part("phone_number")
                                String phone, @Header("Authorization") String authHeader);
 
+    @GET("profile/{id}/")
+    Call<ModelProfile> getProfile(@Path("id") int id,@Header("Authorization") String authHeader);
 
+    @GET("logout/")
+    Call<ResponseBody> logOut(@Header("Authorization") String authHeader);
 
 }

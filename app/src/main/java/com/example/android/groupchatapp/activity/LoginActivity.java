@@ -1,5 +1,6 @@
 package com.example.android.groupchatapp.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,7 +28,8 @@ public class LoginActivity extends AppCompatActivity {
    private static String token;
    private static int user_id;
    String user,pwd;
-   //Controller mController;
+   Controller mController;
+   private ApiInterface apiInterface;
 
 
 
@@ -37,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         username=(EditText) findViewById(R.id.username);
         password=(EditText) findViewById(R.id.password);
-       // mController=(Controller) getApplicationContext();
+        mController=(Controller) getApplicationContext();
 
     }
 
@@ -54,25 +56,30 @@ public class LoginActivity extends AppCompatActivity {
          user = username.getText().toString().trim();
          pwd = password.getText().toString().trim();
 
-        ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
+         apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
 
         ModelLogin modelLogin = new ModelLogin(user,pwd);
 
-        Call<ModelLogin> call=apiInterface.Login(modelLogin);
+        mController.setModelLogin(modelLogin);
+
+        Call<ModelLogin> call=apiInterface.Login(mController.getModelLogin());
 
         call.enqueue(new Callback<ModelLogin>() {
             @Override
             public void onResponse(Call<ModelLogin> call, Response<ModelLogin> response) {
                 progressDialog.dismiss();
+                if (response.isSuccessful()) {
+                    /*Toast.makeText(LoginActivity.this, "user_id" + response.body().getUser_id(), Toast.LENGTH_SHORT).show();*/
 
-                Toast.makeText(LoginActivity.this,"user_id"+response.body().getUser_id(),Toast.LENGTH_SHORT).show();
+                    SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
+                    SharedPreferences.Editor editor = myPref.edit();
+                    editor.putInt("user_id", response.body().getUser_id()).commit();
+                    user_id = myPref.getInt("user_id", response.body().getUser_id());
+                    myToken();
 
-                SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
-                SharedPreferences.Editor editor = myPref.edit();
-                editor.putInt("user_id",response.body().getUser_id()).commit();
-                user_id = myPref.getInt("user_id",response.body().getUser_id());
-                myToken();
-
+                }else{
+                    Toast.makeText(LoginActivity.this,"something went wrong",Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -90,27 +97,33 @@ public class LoginActivity extends AppCompatActivity {
 
     public void myToken() {
 
-        ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
+        apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
 
         ModelToken modelToken = new ModelToken(user, pwd);
 
+        mController.setModelToken(modelToken);
 
-        Call<ModelToken> call = apiInterface.Token(modelToken);
+        Call<ModelToken> call = apiInterface.Token(mController.getModelToken());
 
         call.enqueue(new Callback<ModelToken>() {
             @Override
             public void onResponse(Call<ModelToken> call, Response<ModelToken> response) {
                 if(response.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this,response.body().getToken(), Toast.LENGTH_SHORT).show();
+                   /* Toast.makeText(LoginActivity.this,response.body().getToken(), Toast.LENGTH_SHORT).show();*/
 
                     SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
                     SharedPreferences.Editor editor = myPref.edit();
                     editor.putString("token", response.body().getToken()).commit();
+
                     token = myPref.getString("token",response.body().getToken());
 
-                    Intent intent = new Intent(LoginActivity.this,ProfileActivity.class);
+                    Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
                     startActivity(intent);
+
+                }else{
+                    Toast.makeText(LoginActivity.this,"Response is not Successful",Toast.LENGTH_SHORT).show();
                 }
+
 
             }
 
@@ -125,27 +138,10 @@ public class LoginActivity extends AppCompatActivity {
         return token;
     }
 
+    public void SignUpAct(View view){
+        Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
+        startActivity(intent);
+    }
 
-   /* public void authenticate(){
-        ApiInterface apiInterface =ApiClient.ApiClient().create(ApiInterface.class);
-        Call<ResponseBody> call=apiInterface.Authentication("JWT "+token);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()) {
-                   // Toast.makeText(LoginActivity.this, "Authentication Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this,ProfileActivity.class);
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(LoginActivity.this, "Authentication not Successful", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
-
+   
 }
