@@ -1,15 +1,20 @@
 package com.example.android.groupchatapp.fragment;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
+import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
@@ -51,11 +57,34 @@ public class CreateGroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
     View view= inflater.inflate(R.layout.fragment_create_group,container,false);
 
-    android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
-    activity = (AppCompatActivity) getActivity();
-    activity.setSupportActionBar(toolbar);
 
-    group_name = (EditText) view.findViewById(R.id.group_name);
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
+        activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+
+        //checking the permission of mobile storage access
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" +activity.getPackageName()));
+            activity.finish();
+            startActivity(intent);
+
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" +activity.getPackageName()));
+            activity.finish();
+            startActivity(intent);
+
+        }
+
+
+        group_name = (EditText) view.findViewById(R.id.group_name);
     group_image = (ImageView) view.findViewById(R.id.group_profile);
     profile_choose_button=(Button) view.findViewById(R.id.group_profile_choose_button);
     group_create_button=(Button) view.findViewById(R.id.group_profile_create_button);
@@ -130,23 +159,21 @@ public class CreateGroupFragment extends Fragment {
             if(resultCode==activity.RESULT_OK){
                 {
                     Uri contactData = data.getData();
-                    Cursor c = activity.managedQuery(contactData, null, null, null, null);
-                    if (c.moveToFirst())
-                    {
-                        String id = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
-
-                        String hasPhone =
-                                c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-
-                        if (hasPhone.equalsIgnoreCase("1"))
-                        {
-                            Cursor phones = activity.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,
-                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,null, null);
-                            phones.moveToFirst();
-                            String cNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-                        }
-                    }
+                   Cursor cursor = activity.getContentResolver().query(contactData,null,null,null,null);
+                   if(cursor.moveToFirst()){
+                       String contact_id=cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                       String has_contact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                       //	HAS_PHONE_NUMBER An indicator of whether this contact has at least one phone number,return 0 or 1.
+                       String num= "";
+                       if(Integer.valueOf(has_contact)==1){
+                           Cursor numbers = activity.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                   ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contact_id, null, null);
+                           while(numbers.moveToNext()){
+                               num = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                               Toast.makeText(activity,"phone number ="+num,Toast.LENGTH_SHORT).show();
+                           }
+                       }
+                   }
                 }
             }
 

@@ -146,8 +146,13 @@ public class ProfileActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+                progressDialog.dismiss();
                if(response.isSuccessful()) {
-                   getProfile();
+                   Toast.makeText(ProfileActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+
+                   Intent intent =new Intent(ProfileActivity.this,ProfileViewActivity.class);
+                   startActivity(intent);
+
                }else{
                    Toast.makeText(ProfileActivity.this,"Something went wrong.",Toast.LENGTH_SHORT).show();
                }
@@ -175,43 +180,7 @@ public class ProfileActivity extends AppCompatActivity {
         return result;
     }
 
-  public void getProfile(){
-      final ProgressDialog progressDialog = new ProgressDialog(ProfileActivity.this);
-      progressDialog.setMessage("Loading...");
-      progressDialog.show();
 
-      ApiInterface apiInterface =ApiClient.ApiClient().create(ApiInterface.class);
-
-      Call<ModelProfile> call =apiInterface.getProfile(LoginActivity.getUser_id(),"JWT " + LoginActivity.getToken());
-
-      call.enqueue(new Callback<ModelProfile>() {
-          @Override
-          public void onResponse(Call<ModelProfile> call, Response<ModelProfile> response) {
-              progressDialog.dismiss();
-
-              if(response.isSuccessful()) {
-
-                  String imageUrl = modelProfile.getAvatar();
-                  Picasso.with(ProfileActivity.this).load(imageUrl).fit().centerCrop().into(profile);
-
-                  name.setText(modelProfile.getName());
-                  number.setText(modelProfile.getPhone_number());
-
-              }
-
-
-          }
-
-          @Override
-          public void onFailure(Call<ModelProfile> call, Throwable t) {
-
-              progressDialog.dismiss();
-              Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-          }
-      });
-
-
-  }
 }
 
 /***

@@ -44,12 +44,15 @@ public interface ApiInterface {
     @Multipart
     @PUT("profile/{id}/")
     Call<ResponseBody> profile(@Path("id") int id, @Part MultipartBody.Part file , @Part("name") RequestBody name,@Part("phone_number")
-                               String phone, @Header("Authorization") String authHeader);
+                              String phone, @Header("Authorization") String authHeader);
 
     @GET("profile/{id}/")
     Call<ModelProfile> getProfile(@Path("id") int id,@Header("Authorization") String authHeader);
 
     @GET("logout/")
     Call<ResponseBody> logOut(@Header("Authorization") String authHeader);
+
+    @POST("contactlist/")
+    Call<ResponseBody> createContactList();
 
 }

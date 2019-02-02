@@ -1,9 +1,15 @@
 package com.example.android.groupchatapp.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -14,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.fragment.CreateGroupFragment;
+import com.example.android.groupchatapp.fragment.ProfileFragment;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
@@ -31,6 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,12 +62,13 @@ public class HomeActivity extends AppCompatActivity {
                 drawerLayout.closeDrawers();
 
                 if(menuItem.getItemId()==R.id.profile_drawer){
-                    Intent intent = new Intent(HomeActivity.this,ProfileActivity.class);
+
+                    Intent intent = new Intent(HomeActivity.this,ProfileViewActivity.class);
                     startActivity(intent);
                 }
 
                 if(menuItem.getItemId()==R.id.create_group){
-                    getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,new CreateGroupFragment())
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new CreateGroupFragment())
                             .addToBackStack(null).commit();
                 }
 
