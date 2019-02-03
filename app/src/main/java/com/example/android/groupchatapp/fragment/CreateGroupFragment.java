@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
@@ -30,6 +31,8 @@ import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,6 +55,7 @@ public class CreateGroupFragment extends Fragment {
     Uri imageUri;
     InputStream imageStream;
     Bitmap selectedImage;
+    TextView group_profile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -82,12 +86,11 @@ public class CreateGroupFragment extends Fragment {
             startActivity(intent);
 
         }
-
-
         group_name = (EditText) view.findViewById(R.id.group_name);
     group_image = (ImageView) view.findViewById(R.id.group_profile);
     profile_choose_button=(Button) view.findViewById(R.id.group_profile_choose_button);
     group_create_button=(Button) view.findViewById(R.id.group_profile_create_button);
+    group_profile=(TextView) view.findViewById(R.id.view_group_profile_textView);
 
     profile_choose_button.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -102,6 +105,15 @@ public class CreateGroupFragment extends Fragment {
         public void onClick(View v) {
 
             createGroup();
+        }
+    });
+
+    group_profile.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+           Intent intent = new Intent(activity,HomeActivity.class);
+           intent.putExtra("frag","fragment");
+           startActivity(intent);
         }
     });
 

@@ -55,4 +55,7 @@ public interface ApiInterface {
     @POST("contactlist/")
     Call<ResponseBody> createContactList();
 
+    @GET("groupprofile/{id}/")
+    Call<ModelProfile> groupProfile(@Path("id") int id,@Header("Authorization") String authHeader);
+
 }
