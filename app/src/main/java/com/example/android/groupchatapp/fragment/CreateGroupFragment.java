@@ -27,8 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
+import com.example.android.groupchatapp.activity.GroupActivity;
 import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
+import com.example.android.groupchatapp.activity.ProfileActivity;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
@@ -55,7 +57,7 @@ public class CreateGroupFragment extends Fragment {
     Uri imageUri;
     InputStream imageStream;
     Bitmap selectedImage;
-    TextView group_profile;
+    TextView text_group_profile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -90,7 +92,7 @@ public class CreateGroupFragment extends Fragment {
     group_image = (ImageView) view.findViewById(R.id.group_profile);
     profile_choose_button=(Button) view.findViewById(R.id.group_profile_choose_button);
     group_create_button=(Button) view.findViewById(R.id.group_profile_create_button);
-    group_profile=(TextView) view.findViewById(R.id.view_group_profile_textView);
+    text_group_profile=(TextView) view.findViewById(R.id.text_profile_update);
 
     profile_choose_button.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -108,10 +110,10 @@ public class CreateGroupFragment extends Fragment {
         }
     });
 
-    group_profile.setOnClickListener(new View.OnClickListener() {
+    text_group_profile.setOnClickListener(new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-           Intent intent = new Intent(activity,HomeActivity.class);
+        public void onClick(View v) {         //to move from one fragment to another
+           Intent intent = new Intent(activity,GroupActivity.class);
            intent.putExtra("frag","fragment");
            startActivity(intent);
         }
@@ -125,7 +127,6 @@ public class CreateGroupFragment extends Fragment {
     public void chooseGroupProfile(){
         Intent pickImage=new Intent(Intent.ACTION_PICK);
         pickImage.setType("image/*");
-        activity=(AppCompatActivity) getActivity();
 
         if (pickImage.resolveActivity(activity.getPackageManager()) != null) {
             //we check that at least one app is there to perform our action,if no app was there

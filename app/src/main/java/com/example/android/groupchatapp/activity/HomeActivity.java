@@ -33,8 +33,6 @@ import retrofit2.Response;
 public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    String frag;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,19 +108,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        Intent intent =getIntent();
-        if(intent.getExtras()!=null){
-             frag = intent.getStringExtra("frag");
-        }
-        switch (frag){
-            case "fragment":
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new FragmentViewGroupProfile())
-                        .addToBackStack(null).commit();
-        }
-    }
 
     //To open the navigation drawer when we click on the nav drawer button (three parallel lines)
     @Override

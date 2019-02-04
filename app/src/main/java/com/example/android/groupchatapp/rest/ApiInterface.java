@@ -37,7 +37,7 @@ public interface ApiInterface {
     Call<ResponseBody> Authentication(@Header("Authorization") String token);
 
     @Multipart
-    @POST("creategroup/")
+    @POST("new_group/")
     Call<ResponseBody> createGroup(@Part MultipartBody.Part file,@Part("name") RequestBody name, @Header("Authorization") String authHeader);
 
 
@@ -55,7 +55,13 @@ public interface ApiInterface {
     @POST("contactlist/")
     Call<ResponseBody> createContactList();
 
-    @GET("groupprofile/{id}/")
+    @GET("api/groupprofile/{id}/")
     Call<ModelProfile> groupProfile(@Path("id") int id,@Header("Authorization") String authHeader);
+
+    @Multipart
+    @PUT("api/groupprofile/{id}/")
+    Call<ModelProfile> updateGroupProfile(@Path("id") int id,@Part MultipartBody.Part file,
+                                          @Part("name") RequestBody name, @Header("Authorization") String authHeader);
+
 
 }

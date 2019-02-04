@@ -47,7 +47,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ProfileViewActivity"></activity>
+        <activity android:name=".activity.ProfileViewActivity" />
+        <activity android:name=".activity.GroupActivity"></activity>
     </application>
 
 </manifest>

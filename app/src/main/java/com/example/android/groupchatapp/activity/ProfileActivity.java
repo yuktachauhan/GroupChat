@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.android.groupchatapp.Controller;
 import com.example.android.groupchatapp.R;
+import com.example.android.groupchatapp.fragment.FragmentViewGroupProfile;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
@@ -45,6 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
     EditText name, number;
     final static int GALLERY_REQUEST_CODE = 1;
     Uri imageUri;
+    String frag;
     //Bitmap selectedImage;
     //InputStream imageStream;
     Controller mController;
