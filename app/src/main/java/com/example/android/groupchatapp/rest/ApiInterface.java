@@ -1,11 +1,14 @@
 package com.example.android.groupchatapp.rest;
 
 import com.example.android.groupchatapp.model.ModelLogin;
+import com.example.android.groupchatapp.model.ModelNumberList;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.model.ModelSignUp;
 import com.example.android.groupchatapp.model.ModelToken;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -53,7 +56,7 @@ public interface ApiInterface {
     Call<ResponseBody> logOut(@Header("Authorization") String authHeader);
 
     @POST("contactlist/")
-    Call<ResponseBody> createContactList();
+    Call<ResponseBody> createContactList(@Body HashMap modelNumberLists, @Header("Authorization") String authHeader);
 
     @GET("api/groupprofile/{id}/")
     Call<ModelProfile> groupProfile(@Path("id") int id,@Header("Authorization") String authHeader);

@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     token = myPref.getString("token",response.body().getToken());
 
-                    Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+                    Intent intent = new Intent(LoginActivity.this,ContactsActivity.class);
                     startActivity(intent);
 
                 }else{
