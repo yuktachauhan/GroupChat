@@ -16,23 +16,26 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include layout="@layout/toolbar"/>
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/group"
             android:layout_gravity="bottom"
+            android:onClick="contactRespone"
             android:layout_marginHorizontal="320dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/group" />
 
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="50dp"
+            android:scrollbars="vertical"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
         </android.support.v7.widget.RecyclerView>
 
     </FrameLayout>

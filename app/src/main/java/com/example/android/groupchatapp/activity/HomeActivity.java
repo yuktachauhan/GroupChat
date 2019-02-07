@@ -16,12 +16,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.fragment.CreateGroupFragment;
 import com.example.android.groupchatapp.fragment.FragmentViewGroupProfile;
 import com.example.android.groupchatapp.fragment.ProfileFragment;
+import com.example.android.groupchatapp.fragment.ResponseContactListFragment;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
@@ -121,4 +123,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    public void contactRespone(View view) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ResponseContactListFragment())
+                .addToBackStack(null).commit();
+    }
 }
