@@ -31,6 +31,7 @@ import com.example.android.groupchatapp.activity.GroupActivity;
 import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
 import com.example.android.groupchatapp.activity.ProfileActivity;
+import com.example.android.groupchatapp.model.ModelGroupCreate;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
@@ -43,7 +44,6 @@ import java.io.InputStream;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -54,6 +54,7 @@ public class CreateGroupFragment extends Fragment {
     public static final int GALLERY_REQUEST_CODE=1;
     AppCompatActivity activity;
     Uri imageUri;
+    File file;
     TextView text_group_profile;
 
     @Override
@@ -120,7 +121,6 @@ public class CreateGroupFragment extends Fragment {
             //we check that at least one app is there to perform our action,if no app was there
             startActivityForResult(pickImage, GALLERY_REQUEST_CODE);
             //then because we check our app will not crash
-
         }
     }
 
@@ -132,8 +132,7 @@ public class CreateGroupFragment extends Fragment {
             if (resultCode == activity.RESULT_OK) {
 
                     imageUri = data.getData();
-                    //File imageFile =  new File(getRealPathFromURI(imageUri));
-                    //createProfile();
+                    //createMyGroup();
             }
         }
     }
@@ -143,33 +142,35 @@ public class CreateGroupFragment extends Fragment {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        String name = group_name.getText().toString().trim();
 
-        File file = new File(getRealPathFromURI(imageUri));
+        String name = group_name.getText().toString().trim();
+        if(imageUri!=null){
+         file = new File(getRealPathFromURI(imageUri));
+        }
         RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        RequestBody my_name=RequestBody.create(MediaType.parse("text/plain"),name);
+        RequestBody my_name=RequestBody.create(MediaType.parse("application/json"),name);
 
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
-
+        ModelGroupCreate modelGroupCreate = new ModelGroupCreate(name);
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-        retrofit2.Call<ResponseBody> call=apiInterface.createGroup(fileToUpload,my_name,"JWT " + LoginActivity.getToken());
+        retrofit2.Call<ModelGroupCreate> call=apiInterface.createGroup(fileToUpload,my_name,"JWT " + LoginActivity.getToken());
 
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<ModelGroupCreate>() {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(retrofit2.Call<ModelGroupCreate> call, Response<ModelGroupCreate> response) {
                 progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    Toast.makeText(activity, "group created", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, response.body().getId(), Toast.LENGTH_SHORT).show();
 
 
                 }else{
-                    Toast.makeText(activity,"some error occured",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,"some error occurred",Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+            public void onFailure(retrofit2.Call<ModelGroupCreate> call, Throwable t) {
                progressDialog.dismiss();
                 Toast.makeText(activity,t.getMessage(),Toast.LENGTH_SHORT).show();
             }
@@ -178,7 +179,6 @@ public class CreateGroupFragment extends Fragment {
 
 
     }
-
     private String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = activity.getContentResolver().query(contentURI, null, null, null, null);

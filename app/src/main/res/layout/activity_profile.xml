@@ -25,7 +25,6 @@
             android:layout_gravity="center_horizontal"
             />
 
-
         <EditText
             android:id="@+id/Name"
             android:hint="Name"

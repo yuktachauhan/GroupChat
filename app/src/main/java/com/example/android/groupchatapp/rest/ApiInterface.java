@@ -1,5 +1,6 @@
 package com.example.android.groupchatapp.rest;
 
+import com.example.android.groupchatapp.model.ModelGroupCreate;
 import com.example.android.groupchatapp.model.NumberListModel;
 import com.example.android.groupchatapp.model.ModelLogin;
 import com.example.android.groupchatapp.model.ModelProfile;
@@ -37,11 +38,6 @@ public interface ApiInterface {
     Call<ResponseBody> Authentication(@Header("Authorization") String token);
 
     @Multipart
-    @POST("new_group/")
-    Call<ResponseBody> createGroup(@Part MultipartBody.Part file,@Part("name") RequestBody name, @Header("Authorization") String authHeader);
-
-
-    @Multipart
     @PUT("profile/{id}/")
     Call<ResponseBody> profile(@Path("id") int id, @Part MultipartBody.Part file , @Part("name") RequestBody name,@Part("phone_number")
                               String phone, @Header("Authorization") String authHeader);
@@ -63,5 +59,10 @@ public interface ApiInterface {
     Call<ModelProfile> updateGroupProfile(@Path("id") int id,@Part MultipartBody.Part file,
                                           @Part("name") RequestBody name, @Header("Authorization") String authHeader);
 
+    @Multipart
+    @POST("new_group/")
+    Call<ModelGroupCreate> createGroup(@Part MultipartBody.Part file ,@Part("name") RequestBody name,@Header("Authorization") String authHeader);
 
+    @POST("new_group/")
+    Call<ModelGroupCreate> createGroup(@Body ModelGroupCreate modelGroupCreate,@Header("Authorization") String authHeader);
 }
