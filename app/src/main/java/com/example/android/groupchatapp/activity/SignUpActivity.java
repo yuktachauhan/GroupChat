@@ -96,6 +96,8 @@ public class SignUpActivity extends AppCompatActivity {
                progressDialog.dismiss();
                if (response.isSuccessful()){
                    Toast.makeText(SignUpActivity.this,"Confirm your email and login.",Toast.LENGTH_SHORT).show();
+                   Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+                   startActivity(intent);
            }
                else
                    Toast.makeText(SignUpActivity.this,"Something went wrong",Toast.LENGTH_SHORT);

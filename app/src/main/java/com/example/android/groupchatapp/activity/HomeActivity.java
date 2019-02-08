@@ -70,8 +70,8 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
                 if(menuItem.getItemId()==R.id.create_group){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new CreateGroupFragment())
-                            .addToBackStack(null).commit();
+                    Intent intent = new Intent(HomeActivity.this,GroupCreateActivity.class);
+                    startActivity(intent);
                 }
 
                 if(menuItem.getItemId()==R.id.logout){
@@ -123,8 +123,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void contactRespone(View view) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ResponseContactListFragment())
-                .addToBackStack(null).commit();
+    public void groupCreate(View view) {
+        Intent intent = new Intent(HomeActivity.this,GroupCreateActivity.class);
+        startActivity(intent);
     }
 }

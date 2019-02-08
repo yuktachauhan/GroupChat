@@ -5,18 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,19 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
-import com.example.android.groupchatapp.activity.GroupActivity;
-import com.example.android.groupchatapp.activity.HomeActivity;
+import com.example.android.groupchatapp.activity.FragmentContainerActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
-import com.example.android.groupchatapp.activity.ProfileActivity;
 import com.example.android.groupchatapp.model.ModelGroupCreate;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -102,7 +92,7 @@ public class CreateGroupFragment extends Fragment {
     text_group_profile.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {         //to move from one fragment to another
-           Intent intent = new Intent(activity,GroupActivity.class);
+           Intent intent = new Intent(activity,FragmentContainerActivity.class);
            intent.putExtra("frag","fragment");
            startActivity(intent);
         }

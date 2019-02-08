@@ -7,8 +7,9 @@ import android.os.Bundle;
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.fragment.FragmentViewGroupProfile;
 import com.example.android.groupchatapp.fragment.GroupUpdateFragment;
+import com.example.android.groupchatapp.fragment.ResponseContactListFragment;
 
-public class GroupActivity extends AppCompatActivity {
+public class FragmentContainerActivity extends AppCompatActivity {
 
     String frag;
 
@@ -39,7 +40,9 @@ public class GroupActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new GroupUpdateFragment())
                         .addToBackStack(null).commit();
                 break;
-
+            case "responseContactList":
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new ResponseContactListFragment())
+                        .addToBackStack(null).commit();
         }
     }
 }

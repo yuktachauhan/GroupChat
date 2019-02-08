@@ -48,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ProfileViewActivity" />
-        <activity android:name=".activity.GroupActivity" />
+        <activity android:name=".activity.FragmentContainerActivity" />
         <activity android:name=".activity.ContactsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,7 +56,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.GroupCreateActivity"></activity>
+        <activity android:name=".activity.GroupCreateActivity" />
+        <activity android:name=".activity.GroupMessageActivity"></activity>
     </application>
 
 </manifest>
