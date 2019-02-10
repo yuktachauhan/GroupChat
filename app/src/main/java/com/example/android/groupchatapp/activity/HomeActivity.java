@@ -1,15 +1,11 @@
 package com.example.android.groupchatapp.activity;
 
-import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,13 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
-import com.example.android.groupchatapp.fragment.CreateGroupFragment;
-import com.example.android.groupchatapp.fragment.FragmentViewGroupProfile;
-import com.example.android.groupchatapp.fragment.ProfileFragment;
-import com.example.android.groupchatapp.fragment.ResponseContactListFragment;
+import com.example.android.groupchatapp.model.ModelGroupList;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
@@ -35,6 +29,7 @@ import retrofit2.Response;
 public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    ImageView icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +47,13 @@ public class HomeActivity extends AppCompatActivity {
          *Enable the app bar's "home" button by calling setDisplayHomeAsUpEnabled(true),
          * and then change it to use the menu icon by calling setHomeAsUpIndicator(int), as shown here:
          * */
-
+        icon =(ImageView) findViewById(R.id.group_icon);
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               groupListShow();
+            }
+        });
         drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView) findViewById(R.id.nav_view);
 
@@ -110,6 +111,37 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    public void groupListShow(){
+        final ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
+        progressDialog.setMessage("Sending...");
+        progressDialog.show();
+
+        ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
+
+        Call<ModelGroupList> call =apiInterface.groupList("JWT " + LoginActivity.getToken());
+
+       call.enqueue(new Callback<ModelGroupList>() {
+           @Override
+           public void onResponse(Call<ModelGroupList> call, Response<ModelGroupList> response) {
+               progressDialog.dismiss();
+               if(response.isSuccessful()) {
+                   Toast.makeText(HomeActivity.this, response.body().getName(), Toast.LENGTH_LONG).show();
+               }else{
+                   Toast.makeText(HomeActivity.this, "not sucessfull", Toast.LENGTH_LONG).show();
+               }
+           }
+
+           @Override
+           public void onFailure(Call<ModelGroupList> call, Throwable t) {
+               progressDialog.dismiss();
+               Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+           }
+       });
+
+
+    }
+
+
 
     //To open the navigation drawer when we click on the nav drawer button (three parallel lines)
     @Override
@@ -123,8 +155,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void groupCreate(View view) {
+   /* public void groupCreate(View view) {
         Intent intent = new Intent(HomeActivity.this,GroupCreateActivity.class);
         startActivity(intent);
-    }
+    }*/
 }

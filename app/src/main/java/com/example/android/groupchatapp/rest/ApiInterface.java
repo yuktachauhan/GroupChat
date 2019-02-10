@@ -1,6 +1,7 @@
 package com.example.android.groupchatapp.rest;
 
 import com.example.android.groupchatapp.model.ModelGroupCreate;
+import com.example.android.groupchatapp.model.ModelGroupList;
 import com.example.android.groupchatapp.model.NumberListModel;
 import com.example.android.groupchatapp.model.ModelLogin;
 import com.example.android.groupchatapp.model.ModelProfile;
@@ -65,4 +66,7 @@ public interface ApiInterface {
 
     @POST("new_group/")
     Call<ModelGroupCreate> createGroup(@Body ModelGroupCreate modelGroupCreate,@Header("Authorization") String authHeader);
+
+    @GET("group/")
+    Call<ModelGroupList> groupList(@Header("Authorization") String authHeader);
 }
