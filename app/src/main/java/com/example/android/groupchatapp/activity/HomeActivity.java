@@ -21,6 +21,9 @@ import com.example.android.groupchatapp.model.ModelGroupList;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,6 +33,12 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     ImageView icon;
+    ArrayList<ModelGroupList> groupLists;
+    private static ArrayList<String> nameList;
+    private static ArrayList<Integer> idList;
+    private static ArrayList<String> avatarList;
+    private static ArrayList<Integer> adminList;
+    private static ArrayList<ArrayList<Integer>> membersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,21 +127,37 @@ public class HomeActivity extends AppCompatActivity {
 
         ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
 
-        Call<ModelGroupList> call =apiInterface.groupList("JWT " + LoginActivity.getToken());
+        Call<ArrayList<ModelGroupList>> call =apiInterface.groupList("JWT " + LoginActivity.getToken());
 
-       call.enqueue(new Callback<ModelGroupList>() {
+       call.enqueue(new Callback<ArrayList<ModelGroupList>>() {
            @Override
-           public void onResponse(Call<ModelGroupList> call, Response<ModelGroupList> response) {
+           public void onResponse(Call<ArrayList<ModelGroupList>> call, Response<ArrayList<ModelGroupList>> response) {
                progressDialog.dismiss();
+
                if(response.isSuccessful()) {
-                   Toast.makeText(HomeActivity.this, response.body().getName(), Toast.LENGTH_LONG).show();
+                   nameList = new ArrayList<String>();
+                   idList = new ArrayList<Integer>();
+                   avatarList = new ArrayList<String>();
+                   adminList = new ArrayList<Integer>();
+                   membersList = new ArrayList<ArrayList<Integer>>();
+                   groupLists=response.body();
+                   for(int i=0;i<groupLists.size();i++) {
+                        ModelGroupList  modelGroupList = groupLists.get(i);
+                        nameList.add(modelGroupList.getName());
+                        idList.add(modelGroupList.getId());
+                        avatarList.add(modelGroupList.getAvatar());
+                        adminList.add(modelGroupList.getAdmin());
+                        membersList.add((ArrayList<Integer>) modelGroupList.getMembers());
+                   }
+               Toast.makeText(HomeActivity.this,nameList+""+idList+" "+avatarList+" "+adminList
+                       +" "+membersList+" ",Toast.LENGTH_LONG).show();
                }else{
-                   Toast.makeText(HomeActivity.this, "not sucessfull", Toast.LENGTH_LONG).show();
+                   Toast.makeText(HomeActivity.this, "not successful", Toast.LENGTH_LONG).show();
                }
            }
 
            @Override
-           public void onFailure(Call<ModelGroupList> call, Throwable t) {
+           public void onFailure(Call<ArrayList<ModelGroupList>> call, Throwable t) {
                progressDialog.dismiss();
                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
            }
@@ -141,7 +166,9 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-
+    public static ArrayList<String> getNameList(){
+        return nameList;
+    }
 
     //To open the navigation drawer when we click on the nav drawer button (three parallel lines)
     @Override

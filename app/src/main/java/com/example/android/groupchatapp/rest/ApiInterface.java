@@ -8,6 +8,7 @@ import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.model.ModelSignUp;
 import com.example.android.groupchatapp.model.ModelToken;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import okhttp3.MultipartBody;
@@ -68,5 +69,5 @@ public interface ApiInterface {
     Call<ModelGroupCreate> createGroup(@Body ModelGroupCreate modelGroupCreate,@Header("Authorization") String authHeader);
 
     @GET("group/")
-    Call<ModelGroupList> groupList(@Header("Authorization") String authHeader);
+    Call<ArrayList<ModelGroupList>> groupList(@Header("Authorization") String authHeader);
 }
