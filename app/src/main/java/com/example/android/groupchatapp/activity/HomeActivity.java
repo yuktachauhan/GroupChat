@@ -11,11 +11,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.groupchatapp.ContactListAdapter;
+import com.example.android.groupchatapp.GrouplistAdapter;
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.model.ModelGroupList;
 import com.example.android.groupchatapp.rest.ApiClient;
@@ -39,32 +45,43 @@ public class HomeActivity extends AppCompatActivity {
     private static ArrayList<String> avatarList;
     private static ArrayList<Integer> adminList;
     private static ArrayList<ArrayList<Integer>> membersList;
+    RecyclerView recyclerView;
+    private GrouplistAdapter grouplistAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
+        groupListShow();
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
+       /* recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
+        grouplistAdapter = new GrouplistAdapter(getNameList());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(HomeActivity.this, LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(grouplistAdapter);
+
+        prepareNameList();*/
 
         /*
          *Enable the app bar's "home" button by calling setDisplayHomeAsUpEnabled(true),
          * and then change it to use the menu icon by calling setHomeAsUpIndicator(int), as shown here:
          * */
-        icon =(ImageView) findViewById(R.id.group_icon);
+        icon = (ImageView) findViewById(R.id.group_icon);
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               groupListShow();
+                groupCreate();
             }
         });
-        drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView=(NavigationView) findViewById(R.id.nav_view);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -73,25 +90,25 @@ public class HomeActivity extends AppCompatActivity {
                 menuItem.setChecked(true);
                 drawerLayout.closeDrawers();
 
-                if(menuItem.getItemId()==R.id.profile_drawer){
+                if (menuItem.getItemId() == R.id.profile_drawer) {
 
-                    Intent intent = new Intent(HomeActivity.this,ProfileViewActivity.class);
+                    Intent intent = new Intent(HomeActivity.this, ProfileViewActivity.class);
                     startActivity(intent);
                 }
 
-                if(menuItem.getItemId()==R.id.create_group){
-                    Intent intent = new Intent(HomeActivity.this,GroupCreateActivity.class);
+                if (menuItem.getItemId() == R.id.create_group) {
+                    Intent intent = new Intent(HomeActivity.this, GroupCreateActivity.class);
                     startActivity(intent);
                 }
 
-                if(menuItem.getItemId()==R.id.logout){
+                if (menuItem.getItemId() == R.id.logout) {
 
                     final ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
                     progressDialog.setMessage("Logging Out");
                     progressDialog.show();
 
-                    ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-                    Call<ResponseBody> call =apiInterface.logOut("JWT " + LoginActivity.getToken());
+                    ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
+                    Call<ResponseBody> call = apiInterface.logOut("JWT " + LoginActivity.getToken());
 
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
@@ -101,7 +118,7 @@ public class HomeActivity extends AppCompatActivity {
                                 Toast.makeText(HomeActivity.this, "Logout", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                                 startActivity(intent);
-                            }else{
+                            } else {
                                 Toast.makeText(HomeActivity.this, "not logout", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -109,7 +126,7 @@ public class HomeActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                             progressDialog.dismiss();
-                         Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -120,53 +137,66 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void groupListShow(){
+    public void prepareNameList(){
+        grouplistAdapter.notifyDataSetChanged();
+    }
+
+    public void groupListShow() {
         final ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
         progressDialog.setMessage("Sending...");
         progressDialog.show();
 
-        ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
+        ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
 
-        Call<ArrayList<ModelGroupList>> call =apiInterface.groupList("JWT " + LoginActivity.getToken());
+        Call<ArrayList<ModelGroupList>> call = apiInterface.groupList("JWT " + LoginActivity.getToken());
 
-       call.enqueue(new Callback<ArrayList<ModelGroupList>>() {
-           @Override
-           public void onResponse(Call<ArrayList<ModelGroupList>> call, Response<ArrayList<ModelGroupList>> response) {
-               progressDialog.dismiss();
+        call.enqueue(new Callback<ArrayList<ModelGroupList>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ModelGroupList>> call, Response<ArrayList<ModelGroupList>> response) {
+                progressDialog.dismiss();
 
-               if(response.isSuccessful()) {
-                   nameList = new ArrayList<String>();
-                   idList = new ArrayList<Integer>();
-                   avatarList = new ArrayList<String>();
-                   adminList = new ArrayList<Integer>();
-                   membersList = new ArrayList<ArrayList<Integer>>();
-                   groupLists=response.body();
-                   for(int i=0;i<groupLists.size();i++) {
-                        ModelGroupList  modelGroupList = groupLists.get(i);
+                if (response.isSuccessful()) {
+                    nameList = new ArrayList<String>();
+                    idList = new ArrayList<Integer>();
+                    avatarList = new ArrayList<String>();
+                    adminList = new ArrayList<Integer>();
+                    membersList = new ArrayList<ArrayList<Integer>>();
+                    groupLists = response.body();
+                    for (int i = 0; i < groupLists.size(); i++) {
+                        ModelGroupList modelGroupList = groupLists.get(i);
                         nameList.add(modelGroupList.getName());
                         idList.add(modelGroupList.getId());
                         avatarList.add(modelGroupList.getAvatar());
                         adminList.add(modelGroupList.getAdmin());
                         membersList.add((ArrayList<Integer>) modelGroupList.getMembers());
-                   }
-               Toast.makeText(HomeActivity.this,nameList+""+idList+" "+avatarList+" "+adminList
-                       +" "+membersList+" ",Toast.LENGTH_LONG).show();
-               }else{
-                   Toast.makeText(HomeActivity.this, "not successful", Toast.LENGTH_LONG).show();
-               }
-           }
+                    }
+                    /*Toast.makeText(HomeActivity.this, nameList + "" + idList + " " + avatarList + " " + adminList
+                            + " " + membersList + " ", Toast.LENGTH_LONG).show();*/
 
-           @Override
-           public void onFailure(Call<ArrayList<ModelGroupList>> call, Throwable t) {
-               progressDialog.dismiss();
-               Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-           }
-       });
+                    grouplistAdapter = new GrouplistAdapter(getNameList());
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.addItemDecoration(new DividerItemDecoration(HomeActivity.this, LinearLayoutManager.VERTICAL));
+                    recyclerView.setAdapter(grouplistAdapter);
+
+                    prepareNameList();
+                } else {
+                    Toast.makeText(HomeActivity.this, "not successful", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ModelGroupList>> call, Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
 
     }
 
-    public static ArrayList<String> getNameList(){
+    public static ArrayList<String> getNameList() {
         return nameList;
     }
 
@@ -182,8 +212,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-   /* public void groupCreate(View view) {
+    public void groupCreate() {
         Intent intent = new Intent(HomeActivity.this,GroupCreateActivity.class);
         startActivity(intent);
-    }*/
+    }
+
 }
