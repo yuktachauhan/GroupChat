@@ -11,11 +11,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.groupchatapp.ContactListAdapter;
+import com.example.android.groupchatapp.GrouplistAdapter;
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.model.ModelGroupList;
 import com.example.android.groupchatapp.rest.ApiClient;
@@ -39,19 +45,20 @@ public class HomeActivity extends AppCompatActivity {
     private static ArrayList<String> avatarList;
     private static ArrayList<Integer> adminList;
     private static ArrayList<ArrayList<Integer>> membersList;
+    private RecyclerView recyclerView;
+    private GrouplistAdapter grouplistAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        groupListShow();
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-
         /*
          *Enable the app bar's "home" button by calling setDisplayHomeAsUpEnabled(true),
          * and then change it to use the menu icon by calling setHomeAsUpIndicator(int), as shown here:
@@ -149,8 +156,18 @@ public class HomeActivity extends AppCompatActivity {
                         adminList.add(modelGroupList.getAdmin());
                         membersList.add((ArrayList<Integer>) modelGroupList.getMembers());
                    }
-               Toast.makeText(HomeActivity.this,nameList+""+idList+" "+avatarList+" "+adminList
-                       +" "+membersList+" ",Toast.LENGTH_LONG).show();
+               /*Toast.makeText(HomeActivity.this,nameList+""+idList+" "+avatarList+" "+adminList
+                       +" "+membersList+" ",Toast.LENGTH_LONG).show();*/
+
+                   recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
+                   grouplistAdapter = new GrouplistAdapter(nameList);
+                   RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                   recyclerView.setLayoutManager(mLayoutManager);
+                   recyclerView.setItemAnimator(new DefaultItemAnimator());
+                   recyclerView.addItemDecoration(new DividerItemDecoration(HomeActivity.this, LinearLayoutManager.VERTICAL));
+                   recyclerView.setAdapter(grouplistAdapter);
+                   prepareGroupList();
+
                }else{
                    Toast.makeText(HomeActivity.this, "not successful", Toast.LENGTH_LONG).show();
                }
@@ -164,6 +181,10 @@ public class HomeActivity extends AppCompatActivity {
        });
 
 
+    }
+
+    public void prepareGroupList(){
+        grouplistAdapter.notifyDataSetChanged();
     }
 
     public static ArrayList<String> getNameList(){
@@ -182,8 +203,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-   /* public void groupCreate(View view) {
+    public void groupCreate(View view) {
         Intent intent = new Intent(HomeActivity.this,GroupCreateActivity.class);
         startActivity(intent);
-    }*/
+    }
 }
