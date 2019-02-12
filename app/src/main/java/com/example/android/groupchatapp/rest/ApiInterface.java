@@ -70,4 +70,7 @@ public interface ApiInterface {
 
     @GET("group/")
     Call<ArrayList<ModelGroupList>> groupList(@Header("Authorization") String authHeader);
+
+    @PUT("api/groupprofile/{id}/add_member/")
+    Call<ResponseBody> add_member(@Path("id") int id,HashMap<String,String> hashMap,@Header("Authorization") String authHeader);
 }

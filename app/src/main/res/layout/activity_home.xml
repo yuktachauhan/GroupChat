@@ -19,16 +19,6 @@
 
         <include layout="@layout/toolbar"/>
 
-        <ImageView
-            android:id="@+id/group_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom"
-            android:layout_marginHorizontal="280dp"
-            android:layout_marginBottom="50dp"
-            android:src="@drawable/group"
-            android:scaleType="centerCrop"/>
-
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="50dp"
             android:scrollbars="vertical"
@@ -37,10 +27,19 @@
             android:layout_height="wrap_content">
         </android.support.v7.widget.RecyclerView>
 
+
+        <ImageView
+            android:id="@+id/group_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:onClick="groupCreate"
+            android:layout_marginHorizontal="320dp"
+            android:layout_marginBottom="0dp"
+            android:src="@drawable/ic_launcher_background"
+            android:scaleType="centerCrop"/>
+
     </FrameLayout>
-
-
-
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.design.widget.NavigationView

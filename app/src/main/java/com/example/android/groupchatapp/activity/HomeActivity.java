@@ -15,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,6 +48,7 @@ public class HomeActivity extends AppCompatActivity {
     private static ArrayList<ArrayList<Integer>> membersList;
     private RecyclerView recyclerView;
     private GrouplistAdapter grouplistAdapter;
+    public static final String TAG ="HomeActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +65,6 @@ public class HomeActivity extends AppCompatActivity {
          *Enable the app bar's "home" button by calling setDisplayHomeAsUpEnabled(true),
          * and then change it to use the menu icon by calling setHomeAsUpIndicator(int), as shown here:
          * */
-        icon =(ImageView) findViewById(R.id.group_icon);
-        icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               groupListShow();
-            }
-        });
         drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView) findViewById(R.id.nav_view);
 
@@ -161,6 +156,17 @@ public class HomeActivity extends AppCompatActivity {
 
                    recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
                    grouplistAdapter = new GrouplistAdapter(nameList);
+                   grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
+                       @Override
+                       public void onItemClick(int position, View v) {
+                           Log.i(TAG, "onItemClick position: " + position);
+                       }
+
+                       @Override
+                       public void onItemLongClick(int position, View v) {
+                           Log.i(TAG, "onItemLongClick pos = " + position);
+                       }
+                   });
                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                    recyclerView.setLayoutManager(mLayoutManager);
                    recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -187,9 +193,6 @@ public class HomeActivity extends AppCompatActivity {
         grouplistAdapter.notifyDataSetChanged();
     }
 
-    public static ArrayList<String> getNameList(){
-        return nameList;
-    }
 
     //To open the navigation drawer when we click on the nav drawer button (three parallel lines)
     @Override
@@ -204,7 +207,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void groupCreate(View view) {
-        Intent intent = new Intent(HomeActivity.this,GroupCreateActivity.class);
+        Intent intent = new Intent(HomeActivity.this,ContactsActivity.class);
         startActivity(intent);
     }
 }
