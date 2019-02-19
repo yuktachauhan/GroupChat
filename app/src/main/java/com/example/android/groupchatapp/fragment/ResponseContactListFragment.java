@@ -19,6 +19,7 @@ import com.example.android.groupchatapp.GrouplistAdapter;
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.activity.ContactsActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
+import com.example.android.groupchatapp.model.ModelMemberAdd;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 
@@ -87,7 +88,8 @@ public class ResponseContactListFragment extends Fragment {
         hashMap=new HashMap<String, String>();
         hashMap.put(name,phone);
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
-        Call<ResponseBody> call= apiInterface.add_member(1,hashMap,"JWT " + LoginActivity.getToken());
+        ModelMemberAdd modelMemberAdd = new ModelMemberAdd(hashMap);
+        Call<ResponseBody> call= apiInterface.add_member(1,modelMemberAdd,"JWT " + LoginActivity.getToken());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

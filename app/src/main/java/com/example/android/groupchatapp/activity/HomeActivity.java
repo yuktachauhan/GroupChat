@@ -11,6 +11,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,6 +35,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
 
 public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -133,11 +144,6 @@ public class HomeActivity extends AppCompatActivity {
                progressDialog.dismiss();
 
                if(response.isSuccessful()) {
-                   nameList = new ArrayList<String>();
-                   idList = new ArrayList<Integer>();
-                   avatarList = new ArrayList<String>();
-                   adminList = new ArrayList<Integer>();
-                   membersList = new ArrayList<ArrayList<Integer>>();
                    groupLists=response.body();
                    recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
                    grouplistAdapter = new GrouplistAdapter(HomeActivity.this,groupLists);
