@@ -31,9 +31,7 @@ public class LoginActivity extends AppCompatActivity {
    Controller mController;
    private ApiInterface apiInterface;
 
-
-
-    @Override
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);

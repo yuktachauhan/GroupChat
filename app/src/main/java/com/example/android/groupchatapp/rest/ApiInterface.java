@@ -72,5 +72,5 @@ public interface ApiInterface {
     Call<ArrayList<ModelGroupList>> groupList(@Header("Authorization") String authHeader);
 
     @PUT("api/groupprofile/{id}/add_member/")
-    Call<ResponseBody> memberAdd(@Path("id") int id,@Header("Authorization") String authHeader);
+    Call<ResponseBody> add_member(@Path("id") int id,@Body HashMap<String,String> hashMap,@Header("Authorization") String authHeader);
 }
