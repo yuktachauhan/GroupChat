@@ -143,7 +143,7 @@ public class HomeActivity extends AppCompatActivity {
                    adminList = new ArrayList<Integer>();
                    membersList = new ArrayList<ArrayList<Integer>>();
                    groupLists=response.body();
-                   for(int i=0;i<groupLists.size();i++) {
+                   /*for(int i=0;i<groupLists.size();i++) {
                         ModelGroupList  modelGroupList = groupLists.get(i);
                         nameList.add(modelGroupList.getName());
                         idList.add(modelGroupList.getId());
@@ -151,11 +151,11 @@ public class HomeActivity extends AppCompatActivity {
                         adminList.add(modelGroupList.getAdmin());
                         membersList.add((ArrayList<Integer>) modelGroupList.getMembers());
                    }
-               /*Toast.makeText(HomeActivity.this,nameList+""+idList+" "+avatarList+" "+adminList
+               *//*Toast.makeText(HomeActivity.this,nameList+""+idList+" "+avatarList+" "+adminList
                        +" "+membersList+" ",Toast.LENGTH_LONG).show();*/
 
                    recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
-                   grouplistAdapter = new GrouplistAdapter(nameList);
+                   grouplistAdapter = new GrouplistAdapter(HomeActivity.this,groupLists);
                    grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
                        @Override
                        public void onItemClick(int position, View v) {
