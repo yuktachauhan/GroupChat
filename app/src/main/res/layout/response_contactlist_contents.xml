@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/image_container"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/default_imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/group"
+            android:scaleType="centerCrop"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/image_container"
+        android:background="@drawable/gradient_background">
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:id="@+id/default_text_member"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            tools:text="Member_Name"
+            />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/default_text_number"
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            tools:text="mobile number"/>
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
