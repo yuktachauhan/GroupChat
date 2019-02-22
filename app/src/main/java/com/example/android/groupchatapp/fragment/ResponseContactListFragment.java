@@ -59,6 +59,8 @@ public class ResponseContactListFragment extends Fragment {
                  phone =((TextView) recyclerView.findViewHolderForAdapterPosition(position).
                         itemView.findViewById(R.id.default_text_number)).getText().toString();
 
+                 hashMap=new HashMap<String, String>();
+                 hashMap.put(name,phone);
                  addMember();
 
             }
@@ -85,8 +87,8 @@ public class ResponseContactListFragment extends Fragment {
     }
 
     public void addMember(){
-        hashMap=new HashMap<String, String>();
-        hashMap.put(name,phone);
+        /*hashMap=new HashMap<String, String>();
+        hashMap.put(name,phone);*/
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
         ModelMemberAdd modelMemberAdd = new ModelMemberAdd(hashMap);
         Call<ResponseBody> call= apiInterface.add_member(1,modelMemberAdd,"JWT " + LoginActivity.getToken());

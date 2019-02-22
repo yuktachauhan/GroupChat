@@ -88,7 +88,7 @@ public class ContactsActivity extends AppCompatActivity {
 
         ApiInterface apiInterface =ApiClient.ApiClient().create(ApiInterface.class);
 
-        NumberListModel numberListModel=new NumberListModel();
+        NumberListModel numberListModel = new NumberListModel();
 
 
         Call<NumberListModel> call=apiInterface.createContactList(getAllContacts(),"JWT " + LoginActivity.getToken());
