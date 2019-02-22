@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,10 +46,9 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView profile;
     EditText name, number;
     final static int GALLERY_REQUEST_CODE = 1;
+    private static final int REQUEST_WRITE_PERMISSION =0;
     Uri imageUri;
     String frag;
-    //Bitmap selectedImage;
-    //InputStream imageStream;
     Controller mController;
     String Name,phoneNumber;
     ModelProfile modelProfile;
@@ -61,26 +61,57 @@ public class ProfileActivity extends AppCompatActivity {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //checking the permission of mobile storage access
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + getPackageName()));
-            finish();
-            startActivity(intent);
-            return;
-        }
-
         profile = (ImageView) findViewById(R.id.profile);
         name = (EditText) findViewById(R.id.Name);
         number = (EditText) findViewById(R.id.phoneNumber);
         mController =(Controller) getApplicationContext();
     }
 
+    public void chooseProfile(View view){
+        accessStorage();
+    }
+
+    public void accessStorage() {
+        if (ContextCompat.checkSelfPermission(ProfileActivity.this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // request the permission
+            ActivityCompat.requestPermissions(ProfileActivity.this,
+                    new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_PERMISSION);
+
+        } else {
+            // Permission has already been granted
+            selectImage();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_WRITE_PERMISSION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    selectImage();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(ProfileActivity.this,"App will not be able to access the gallery",
+                            Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
     //to select image from gallery
 
-    public void selectImage(View view) {
+    public void selectImage() {
         Intent pickImage = new Intent(Intent.ACTION_PICK);
         pickImage.setType("image/*");
         if (pickImage.resolveActivity(getPackageManager()) != null) {
@@ -96,32 +127,12 @@ public class ProfileActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 imageUri = data.getData();
-                createProfile();
-
-                    /*imageStream = getContentResolver().openInputStream(imageUri);
-                    //InputStream: The input stream that holds the raw data to be decoded into a bitmap.
-                    selectedImage = BitmapFactory.decodeStream(imageStream);
-
-
-                    //decode stream: Decode an input stream into a bitmap.
-                    //BitmapFactory Creates Bitmap objects from various sources,including files, streams, and byte-arrays.
-
-
-
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    Toast.makeText(ProfileActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                }*/
-
-            } /*else {
-            Toast.makeText(ProfileActivity.this, "You haven't picked Image", Toast.LENGTH_LONG).show();
-        }*/
+            }
         }
     }
 
 
-    public void createProfile() {
+    public void createProfile(View view) {
         final ProgressDialog progressDialog = new ProgressDialog(ProfileActivity.this);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
@@ -129,25 +140,50 @@ public class ProfileActivity extends AppCompatActivity {
          Name = name.getText().toString().trim();
          phoneNumber = number.getText().toString().trim();
 
-        File file = new File(getRealPathFromURI(imageUri));
-        RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         RequestBody my_name=RequestBody.create(MediaType.parse("text/plain"),Name);
-
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
 
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
 
-         modelProfile = new ModelProfile(Name, phoneNumber);
+        modelProfile = new ModelProfile(Name, phoneNumber);
 
+        //when user chooses an image
+        if(imageUri!=null) {
+            File file = new File(getRealPathFromURI(imageUri));
+            RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
 
-        retrofit2.Call<ResponseBody> call = apiInterface.profile(LoginActivity.getUser_id(),
-                fileToUpload, my_name,modelProfile.getPhone_number()
-                , "JWT " + LoginActivity.getToken());
+            retrofit2.Call<ResponseBody> call = apiInterface.profile(LoginActivity.getUser_id(),
+                    fileToUpload, my_name,modelProfile.getPhone_number()
+                    , "JWT " + LoginActivity.getToken());
 
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+                    progressDialog.dismiss();
+                    if(response.isSuccessful()) {
+                        Toast.makeText(ProfileActivity.this, "Updated", Toast.LENGTH_SHORT).show();
 
-        call.enqueue(new Callback<ResponseBody>() {
+                        Intent intent =new Intent(ProfileActivity.this,ProfileViewActivity.class);
+                        startActivity(intent);
+
+                    }else{
+                        Toast.makeText(ProfileActivity.this,"Something went wrong.",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                    progressDialog.dismiss();
+                    Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        //when user does not choose any image
+        else {
+        Call<ModelProfile> call=apiInterface.profileNoImg(LoginActivity.getUser_id(),modelProfile,"JWT " + LoginActivity.getToken());
+        call.enqueue(new Callback<ModelProfile>() {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(retrofit2.Call<ModelProfile> call, Response<ModelProfile> response) {
                 progressDialog.dismiss();
                if(response.isSuccessful()) {
                    Toast.makeText(ProfileActivity.this, "Updated", Toast.LENGTH_SHORT).show();
@@ -161,11 +197,12 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+            public void onFailure(retrofit2.Call<ModelProfile> call, Throwable t) {
                 progressDialog.dismiss();
                 Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
     }
 
     private String getRealPathFromURI(Uri contentURI) {
@@ -182,7 +219,12 @@ public class ProfileActivity extends AppCompatActivity {
         return result;
     }
 
-
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
+        startActivity(intent);
+    }
 }
 
 /***

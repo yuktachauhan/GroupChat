@@ -45,6 +45,9 @@ public interface ApiInterface {
     Call<ResponseBody> profile(@Path("id") int id, @Part MultipartBody.Part file , @Part("name") RequestBody name,@Part("phone_number")
                               String phone, @Header("Authorization") String authHeader);
 
+    @PUT("profile/{id}/")
+    Call<ModelProfile> profileNoImg(@Path("id") int id,@Body ModelProfile modelProfile, @Header("Authorization") String authHeader);
+
     @GET("profile/{id}/")
     Call<ModelProfile> getProfile(@Path("id") int id,@Header("Authorization") String authHeader);
 

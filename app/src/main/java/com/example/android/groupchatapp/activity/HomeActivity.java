@@ -201,4 +201,9 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(HomeActivity.this,ContactsActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
 }

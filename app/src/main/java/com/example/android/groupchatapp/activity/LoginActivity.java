@@ -94,7 +94,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void myToken() {
-
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setMessage("Logging in...");
+        progressDialog.show();
         apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
 
         ModelToken modelToken = new ModelToken(user, pwd);
@@ -106,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<ModelToken>() {
             @Override
             public void onResponse(Call<ModelToken> call, Response<ModelToken> response) {
+                progressDialog.dismiss();
                 if(response.isSuccessful()) {
                    /* Toast.makeText(LoginActivity.this,response.body().getToken(), Toast.LENGTH_SHORT).show();*/
 
@@ -127,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ModelToken> call, Throwable t) {
+                progressDialog.dismiss();
                 Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -141,4 +145,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
 }

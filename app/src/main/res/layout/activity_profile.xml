@@ -52,10 +52,16 @@
             android:id="@+id/profile_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:onClick="selectImage"
-            android:text="Browse" />
+            android:text="Browse"
+            android:onClick="chooseProfile"/>
 
+<Button
+    android:id="@+id/create_profile"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:text="create profile"
+    android:onClick="createProfile"/>
 
     </LinearLayout>
 

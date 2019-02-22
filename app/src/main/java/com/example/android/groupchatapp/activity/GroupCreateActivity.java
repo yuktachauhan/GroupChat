@@ -121,14 +121,15 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         String Name =groupName.getText().toString().trim();
         RequestBody my_name=RequestBody.create(MediaType.parse("text/plain"),Name);
 
-        File file = new File(getRealPathFromURI(imageUri));
-        RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
-
+        if(imageUri!=null) {
+            File file = new File(getRealPathFromURI(imageUri));
+            RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
+        }
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
         ModelGroupCreate modelGroupCreate = new ModelGroupCreate(Name);
-        Call<ModelGroupCreate> call = apiInterface.createGroup(fileToUpload,my_name,"JWT " + LoginActivity.getToken());
-
+        //Call<ModelGroupCreate> call = apiInterface.createGroup(fileToUpload,my_name,"JWT " + LoginActivity.getToken());
+        Call<ModelGroupCreate> call = apiInterface.createGroup(modelGroupCreate,"JWT " + LoginActivity.getToken());
         call.enqueue(new Callback<ModelGroupCreate>() {
             @Override
                 public void onResponse(Call<ModelGroupCreate> call, Response<ModelGroupCreate> response) {
@@ -163,5 +164,10 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         }
         return result;
     }
-
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(GroupCreateActivity.this, HomeActivity.class);
+        startActivity(intent);
+    }
 }

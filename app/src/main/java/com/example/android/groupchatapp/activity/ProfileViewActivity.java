@@ -39,15 +39,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         profile = (ImageView) findViewById(R.id.profile);
         name = (EditText) findViewById(R.id.Name);
         number = (EditText) findViewById(R.id.phoneNumber);
-
-
     }
-
-   /* @Override
-    public void onResume(){
-        super.onResume();
-        getProfile();
-    }*/
 
     public void getProfile(){
         final ProgressDialog progressDialog = new ProgressDialog(ProfileViewActivity.this);
@@ -67,7 +59,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
                     String imageUrl = response.body().getAvatar();
 
-                    Picasso.with(ProfileViewActivity.this).load(imageUrl).into(profile);
+                    Picasso.with(ProfileViewActivity.this).load(imageUrl).placeholder(R.drawable.group).into(profile);
 
                     name.setText(response.body().getName());
 
@@ -93,6 +85,13 @@ public class ProfileViewActivity extends AppCompatActivity {
     }
     public void editProfile(View view){
         Intent intent=new Intent(ProfileViewActivity.this,ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(ProfileViewActivity.this, HomeActivity.class);
         startActivity(intent);
     }
 }
