@@ -18,6 +18,7 @@ import com.example.android.groupchatapp.ContactListAdapter;
 import com.example.android.groupchatapp.GrouplistAdapter;
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.activity.ContactsActivity;
+import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
 import com.example.android.groupchatapp.model.ModelMemberAdd;
 import com.example.android.groupchatapp.rest.ApiClient;
@@ -46,7 +47,6 @@ public class ResponseContactListFragment extends Fragment {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-
         recyclerView =(RecyclerView) view.findViewById(R.id.recycler_response_contacts);
         contactListAdapter = new ContactListAdapter(ContactsActivity.getArrayList());
         contactListAdapter.setOnItemClickListener(new ContactListAdapter.ClickListener() {
@@ -92,6 +92,7 @@ public class ResponseContactListFragment extends Fragment {
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
         ModelMemberAdd modelMemberAdd = new ModelMemberAdd(hashMap);
         Call<ResponseBody> call= apiInterface.add_member(1,modelMemberAdd,"JWT " + LoginActivity.getToken());
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

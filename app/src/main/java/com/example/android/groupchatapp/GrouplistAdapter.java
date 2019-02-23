@@ -72,7 +72,7 @@ public class GrouplistAdapter extends RecyclerView.Adapter<GrouplistAdapter.MyVi
        int id=modelGroupList.getId();
        String avatar=modelGroupList.getAvatar();
        myViewHolder.groupName.setText(name);
-       myViewHolder.groupId.setText("("+id+")");
+       myViewHolder.groupId.setText(id+"");
        Picasso.with(context).load(avatar).placeholder(R.drawable.group).into(myViewHolder.groupImage);
 
     }
