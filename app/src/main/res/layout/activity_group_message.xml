@@ -1,34 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    
-    <ListView
-        android:id="@+id/messageListView"
-        android:layout_width="match_parent"
-        android:layout_weight="5"
-        android:layout_height="match_parent">
-    </ListView>
+    >
     <LinearLayout
+        android:weightSum="3"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/message"
-            android:layout_width="0dp"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
             android:layout_weight="3"
-            android:layout_height="match_parent"
-            android:hint="enter message"
-            android:textSize="20dp"/>
-      <Button
-      android:id="@+id/msgSendButton"
-    android:layout_width="0dp"
-    android:layout_weight="1"
-    android:layout_height="match_parent"
-    android:text="Send"
-    android:textAllCaps="false"/>
-    </LinearLayout>
+        android:id="@+id/messagelist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:scrollbars="vertical"/>
+        <View
+            android:layout_marginTop="5mm"
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"/>
+
+        <LinearLayout
+            android:weightSum="3"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <EditText
+
+            android:id="@+id/message"
+            android:layout_weight="3"
+            android:layout_width="wrap_content"
+            android:hint="your message"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:text="send"
+            /></LinearLayout>
+
 </LinearLayout>
+    </RelativeLayout>
