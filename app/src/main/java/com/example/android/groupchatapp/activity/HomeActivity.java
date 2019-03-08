@@ -150,7 +150,8 @@ public class HomeActivity extends AppCompatActivity {
                    grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
                        @Override
                        public void onItemClick(int position, View v) {
-                           Log.i(TAG, "onItemClick position: " + position);
+                           Intent intent =new Intent(HomeActivity.this,GroupMessageActivity.class);
+                           startActivity(intent);
                        }
 
                        @Override
