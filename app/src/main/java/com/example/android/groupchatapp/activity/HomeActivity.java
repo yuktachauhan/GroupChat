@@ -125,7 +125,7 @@ public class HomeActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                             progressDialog.dismiss();
-                         Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -154,7 +154,7 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             // Permission has already been granted
             createContacts();
-            }
+        }
     }
 
     @Override
@@ -241,45 +241,45 @@ public class HomeActivity extends AppCompatActivity {
 
         Call<ArrayList<ModelGroupList>> call =apiInterface.groupList("JWT " + LoginActivity.getToken());
 
-       call.enqueue(new Callback<ArrayList<ModelGroupList>>() {
-           @Override
-           public void onResponse(Call<ArrayList<ModelGroupList>> call, Response<ArrayList<ModelGroupList>> response) {
+        call.enqueue(new Callback<ArrayList<ModelGroupList>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ModelGroupList>> call, Response<ArrayList<ModelGroupList>> response) {
 
-               if(response.isSuccessful()) {
-                   groupLists=response.body();
-                   recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
-                   grouplistAdapter = new GrouplistAdapter(HomeActivity.this,groupLists);
-                   grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
-                       @Override
-                       public void onItemClick(int position, View v) {
-                          String groupId = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).
-                                  itemView.findViewById(R.id.default_group_id)).getText().toString().trim();
-                          group_id = Integer.parseInt(groupId);
-                          Log.i("GroupId",group_id+"");
-                       }
+                if(response.isSuccessful()) {
+                    groupLists=response.body();
+                    recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
+                    grouplistAdapter = new GrouplistAdapter(HomeActivity.this,groupLists);
+                    grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
+                        @Override
+                        public void onItemClick(int position, View v) {
+                            String groupId = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).
+                                    itemView.findViewById(R.id.default_group_id)).getText().toString().trim();
+                            group_id = Integer.parseInt(groupId);
+                            Log.i("GroupId",group_id+"");
+                        }
 
-                       @Override
-                       public void onItemLongClick(int position, View v) {
+                        @Override
+                        public void onItemLongClick(int position, View v) {
 
-                       }
-                   });
-                   RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                   recyclerView.setLayoutManager(mLayoutManager);
-                   recyclerView.setItemAnimator(new DefaultItemAnimator());
-                   recyclerView.addItemDecoration(new DividerItemDecoration(HomeActivity.this, LinearLayoutManager.VERTICAL));
-                   recyclerView.setAdapter(grouplistAdapter);
-                   prepareGroupList();
+                        }
+                    });
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.addItemDecoration(new DividerItemDecoration(HomeActivity.this, LinearLayoutManager.VERTICAL));
+                    recyclerView.setAdapter(grouplistAdapter);
+                    prepareGroupList();
 
-               }else{
-                   Toast.makeText(HomeActivity.this, "not successful", Toast.LENGTH_LONG).show();
-               }
-           }
+                }else{
+                    Toast.makeText(HomeActivity.this, "not successful", Toast.LENGTH_LONG).show();
+                }
+            }
 
-           @Override
-           public void onFailure(Call<ArrayList<ModelGroupList>> call, Throwable t) {
-               Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-           }
-       });
+            @Override
+            public void onFailure(Call<ArrayList<ModelGroupList>> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
 
     }
