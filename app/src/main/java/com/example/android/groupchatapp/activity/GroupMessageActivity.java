@@ -13,13 +13,14 @@ import android.widget.Toast;
 import com.example.android.groupchatapp.MessageAdapter;
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.model.ModelMessage;
-import com.github.nkzawa.emitter.Emitter;
+/*import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
+import com.github.nkzawa.socketio.client.Socket;*/
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class GroupMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_message);
 
-        try{
+      /*  try{
           socket = IO.socket("http://8a9285b2.ngrok.io/");
           socket.connect();
         }catch (Exception e){
@@ -106,7 +107,7 @@ public class GroupMessageActivity extends AppCompatActivity {
 
                             // make instance of message
 
-                            ModelMessage m = new ModelMessage(message);
+                            ModelMessage m = new ModelMessage();
 
 
                             //add the message to the messageList
@@ -141,6 +142,7 @@ public class GroupMessageActivity extends AppCompatActivity {
         super.onDestroy();
 
         socket.disconnect();
+    }*/
     }
 }
 

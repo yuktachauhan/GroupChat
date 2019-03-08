@@ -33,7 +33,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,7 +40,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.ProfileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,7 +64,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.GroupCreateActivity" />
-        <activity android:name=".activity.GroupMessageActivity"></activity>
+        <activity android:name=".activity.GroupMessageActivity" />
+        <activity android:name=".activity.MessageActivity"></activity>
     </application>
 
 </manifest>

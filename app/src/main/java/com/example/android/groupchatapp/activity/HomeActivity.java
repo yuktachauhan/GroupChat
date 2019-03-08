@@ -47,11 +47,11 @@ public class HomeActivity extends AppCompatActivity {
     private NavigationView navigationView;
     ImageView icon;
     ArrayList<ModelGroupList> groupLists;
-    private static ArrayList<String> nameList;
+    /*private static ArrayList<String> nameList;
     private static ArrayList<Integer> idList;
     private static ArrayList<String> avatarList;
     private static ArrayList<Integer> adminList;
-    private static ArrayList<ArrayList<Integer>> membersList;
+    private static ArrayList<ArrayList<Integer>> membersList;*/
     private RecyclerView recyclerView;
     private GrouplistAdapter grouplistAdapter;
     public static final String TAG ="HomeActivity";
@@ -150,7 +150,9 @@ public class HomeActivity extends AppCompatActivity {
                    grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
                        @Override
                        public void onItemClick(int position, View v) {
-                           Log.i(TAG, "onItemClick position: " + position);
+                           Intent intent = new Intent(HomeActivity.this,MessageActivity.class);
+                           startActivity(intent);
+                          // Log.i(TAG, "onItemClick position: " + position);
                        }
 
                        @Override
