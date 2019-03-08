@@ -33,8 +33,6 @@ public class SignUpActivity extends AppCompatActivity {
     private ApiInterface apiInterface;
     private String emailId,user,pwd,confirm;
     ProgressDialog progressDialog;
-    /*private static int  user_id;
-    private static String token;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
            public void onResponse(retrofit2.Call<ModelSignUp> call, Response<ModelSignUp> response) {
                progressDialog.dismiss();
                if (response.isSuccessful()){
-                   Toast.makeText(SignUpActivity.this,"Confirm your email and login.",Toast.LENGTH_SHORT).show();
+                   Toast.makeText(SignUpActivity.this,"Confirm your email and login.",Toast.LENGTH_LONG).show();
                    Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
                    startActivity(intent);
            }
@@ -111,80 +109,6 @@ public class SignUpActivity extends AppCompatActivity {
            }
        });
     }
-
-   /* //login and token fetch already at the time of sign up
-   public void selfLogin(){
-       progressDialog.setMessage("Signing up...");
-       progressDialog.show();
-
-       ModelLogin modelLogin = new ModelLogin(user,pwd);
-
-       mController.setModelLogin(modelLogin);
-
-       Call<ModelLogin> call=apiInterface.Login(mController.getModelLogin());
-
-       call.enqueue(new Callback<ModelLogin>() {
-           @Override
-           public void onResponse(Call<ModelLogin> call, Response<ModelLogin> response) {
-               progressDialog.dismiss();
-               if (response.isSuccessful()) {
-                   *//*Toast.makeText(LoginActivity.this, "user_id" + response.body().getUser_id(), Toast.LENGTH_SHORT).show();*//*
-
-                   SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
-                   SharedPreferences.Editor editor = myPref.edit();
-                   editor.putInt("user_id", response.body().getUser_id()).commit();
-                   user_id = myPref.getInt("user_id", response.body().getUser_id());
-                   myToken();
-
-               }else{
-                   Toast.makeText(SignUpActivity.this,"something went wrong",Toast.LENGTH_SHORT).show();
-               }
-           }
-
-           @Override
-           public void onFailure(Call<ModelLogin> call, Throwable t) {
-               progressDialog.dismiss();
-               Toast.makeText(SignUpActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
-           }
-       });
-
-   }
-
-   public void myToken(){
-       ModelToken modelToken = new ModelToken(user, pwd);
-
-       mController.setModelToken(modelToken);
-
-       Call<ModelToken> call = apiInterface.Token(mController.getModelToken());
-
-       call.enqueue(new Callback<ModelToken>() {
-           @Override
-           public void onResponse(Call<ModelToken> call, Response<ModelToken> response) {
-               if(response.isSuccessful()) {
-
-                   SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
-                   SharedPreferences.Editor editor = myPref.edit();
-                   editor.putString("token", response.body().getToken()).commit();
-
-                   token = myPref.getString("token",response.body().getToken());
-
-                   Intent intent = new Intent(SignUpActivity.this,HomeActivity.class);
-                   startActivity(intent);
-
-               }else{
-                   Toast.makeText(SignUpActivity.this,"Response is not Successful",Toast.LENGTH_SHORT).show();
-               }
-
-
-           }
-
-           @Override
-           public void onFailure(Call<ModelToken> call, Throwable t) {
-               Toast.makeText(SignUpActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-           }
-       });*/
-   //}
-
 
     public void login(View v){
         Intent intent =new Intent(SignUpActivity.this,LoginActivity.class);

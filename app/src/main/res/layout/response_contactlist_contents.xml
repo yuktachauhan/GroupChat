@@ -14,13 +14,13 @@
         android:layout_height="88dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_marginLeft="10dp"
             android:id="@+id/default_imageView"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:src="@drawable/group"
+            android:src="@drawable/ic_launcher_background"
             android:scaleType="centerCrop"/>
     </LinearLayout>
 
@@ -31,22 +31,23 @@
         android:orientation="vertical"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/image_container"
-        android:background="@drawable/gradient_background">
+        android:layout_toRightOf="@id/image_container">
 
         <TextView
             android:layout_marginTop="20dp"
             android:id="@+id/default_text_member"
             android:background="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
-            android:layout_height="18dp"
+            android:layout_height="20dp"
             tools:text="Member_Name"
-            />
+            android:textStyle="bold"
+            android:textSize="16dp"/>
         <TextView
             android:layout_marginTop="10dp"
             android:id="@+id/default_text_number"
             android:layout_width="match_parent"
             android:layout_height="18dp"
+            android:textSize="14dp"
             tools:text="mobile number"/>
 
 

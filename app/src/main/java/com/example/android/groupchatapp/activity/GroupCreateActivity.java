@@ -26,6 +26,7 @@ import com.example.android.groupchatapp.rest.ApiInterface;
 
 import java.io.File;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -36,7 +37,7 @@ import retrofit2.Response;
 public class GroupCreateActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     EditText groupName;
-    ImageView groupIcon;
+    CircleImageView groupIcon;
     private static final int REQUEST_WRITE_PERMISSION =0;
     private final static int GALLERY_REQUEST_CODE = 1;
     private Uri imageUri;
@@ -48,7 +49,7 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         groupName = (EditText) findViewById(R.id.group_name);
-        groupIcon = (ImageView) findViewById(R.id.group_profile);
+        groupIcon = (CircleImageView) findViewById(R.id.group_profile);
         }
 
     public void chooseProfile(View view){

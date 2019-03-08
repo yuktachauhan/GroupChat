@@ -39,6 +39,7 @@ import com.example.android.groupchatapp.rest.ApiInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,7 +54,6 @@ import android.support.v7.widget.RecyclerView;
 public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    ImageView icon;
     ArrayList<ModelGroupList> groupLists; //group information
     public static final int REQUEST_READ_CONTACTS=1;
     HashMap<String,String> hashMap;//for sending all contacts
@@ -252,10 +252,12 @@ public class HomeActivity extends AppCompatActivity {
                     grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
                         @Override
                         public void onItemClick(int position, View v) {
-                            String groupId = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).
+                            /*String groupId = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).
                                     itemView.findViewById(R.id.default_group_id)).getText().toString().trim();
                             group_id = Integer.parseInt(groupId);
-                            Log.i("GroupId",group_id+"");
+                            Log.i("GroupId",group_id+"");*/
+                            Intent intent =new Intent(HomeActivity.this,MessageActivity.class);
+                            startActivity(intent);
                         }
 
                         @Override

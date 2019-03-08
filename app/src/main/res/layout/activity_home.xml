@@ -28,16 +28,15 @@
         </android.support.v7.widget.RecyclerView>
 
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/group_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:onClick="groupCreate"
-            android:layout_marginHorizontal="320dp"
-            android:layout_marginBottom="0dp"
-            android:src="@drawable/ic_launcher_background"
-            android:scaleType="centerCrop"/>
+            android:layout_marginHorizontal="280dp"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/group2" />
 
     </FrameLayout>
 

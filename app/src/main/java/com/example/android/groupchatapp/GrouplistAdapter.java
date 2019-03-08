@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class GrouplistAdapter extends RecyclerView.Adapter<GrouplistAdapter.MyViewHolder> {
 
     private static ClickListener clickListener;
@@ -26,7 +28,7 @@ public class GrouplistAdapter extends RecyclerView.Adapter<GrouplistAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
         public TextView groupName,groupId;
-        public ImageView groupImage;
+        public CircleImageView groupImage;
 
         public MyViewHolder(View view){
             super(view);
@@ -34,7 +36,7 @@ public class GrouplistAdapter extends RecyclerView.Adapter<GrouplistAdapter.MyVi
             view.setOnLongClickListener(this);
             groupName = (TextView) view.findViewById(R.id.default_text);
             groupId = (TextView) view.findViewById(R.id.default_group_id);
-            groupImage =(ImageView) view.findViewById(R.id.default_imageView);
+            groupImage =(CircleImageView) view.findViewById(R.id.default_imageView);
         }
 
         @Override

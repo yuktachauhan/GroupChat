@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -12,13 +13,15 @@
         android:layout_height="88dp"
         android:orientation="horizontal">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_marginLeft="10dp"
         android:id="@+id/default_imageView"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FFFFFF"
         android:layout_gravity="center"
-        android:src="@drawable/group"
+        android:src="@drawable/group2"
         android:scaleType="centerCrop"/>
     </LinearLayout>
 
@@ -37,9 +40,10 @@
             android:background="?android:attr/selectableItemBackground"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="18dp"
+            android:layout_height="24dp"
+            android:textSize="18dp"
             tools:text="Group_name"
-            />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/default_group_id"

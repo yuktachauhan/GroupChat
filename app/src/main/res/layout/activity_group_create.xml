@@ -7,40 +7,50 @@
 
     <include layout="@layout/toolbar"/>
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginTop="50dp"
         android:id="@+id/group_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher_round"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@drawable/group2"
         android:layout_gravity="center_horizontal"/>
 
+    <android.support.v7.widget.CardView
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content">
+
     <EditText
+        android:layout_gravity="center_horizontal"
         android:id="@+id/group_name"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:hint="Group Name"
-        />
+        android:textColor="#093edf"/>
+    </android.support.v7.widget.CardView>
 
     <TextView
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Choose Profile"
+        android:textColor="#093edf"
+        android:onClick="chooseProfile"
         android:textSize="24dp"/>
 
-    <Button
-        android:id="@+id/group_profile_choose_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Profile"
-        android:onClick="chooseProfile"
-        />
 
     <Button
+        android:layout_marginTop="40dp"
         android:id="@+id/group_profile_create_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Group"
         android:onClick="createGroup"
+        android:background="#ffffff"
+        android:textColor="#093edf"
+        android:textStyle="bold"
         android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
