@@ -6,9 +6,11 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.groupchatapp.Controller;
@@ -18,14 +20,15 @@ import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
 import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProfileViewActivity extends AppCompatActivity {
 
-    ImageView profile;
-    EditText name, number;
+    CircleImageView profile;
+    TextView name, number;
 
 
     @Override
@@ -36,9 +39,12 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        profile = (ImageView) findViewById(R.id.profile);
-        name = (EditText) findViewById(R.id.Name);
-        number = (EditText) findViewById(R.id.phoneNumber);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("My Profile");
+
+        profile = (CircleImageView) findViewById(R.id.profile);
+        name = (TextView) findViewById(R.id.Name);
+        number = (TextView) findViewById(R.id.phoneNumber);
     }
 
     public void getProfile(){
@@ -86,6 +92,12 @@ public class ProfileViewActivity extends AppCompatActivity {
     public void editProfile(View view){
         Intent intent=new Intent(ProfileViewActivity.this,ProfileActivity.class);
         startActivity(intent);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent =new Intent(getApplicationContext(),HomeActivity.class);
+        startActivityForResult(intent,0);
+        return true;
     }
 
     @Override

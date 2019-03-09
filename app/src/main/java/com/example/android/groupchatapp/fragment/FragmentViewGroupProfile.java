@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.activity.FragmentContainerActivity;
+import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.rest.ApiClient;
@@ -39,7 +41,8 @@ public class FragmentViewGroupProfile extends Fragment {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setTitle("My Profile");
         group_name = (TextView) view.findViewById(R.id.group_name);
         group_image = (ImageView) view.findViewById(R.id.group_profile);
         group_update=  (Button) view.findViewById(R.id.group_profile_update_button);
@@ -76,4 +79,12 @@ public class FragmentViewGroupProfile extends Fragment {
             }
         });
     }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent =new Intent(activity.getApplicationContext(),HomeActivity.class);
+        startActivityForResult(intent,0);
+        return true;
+    }
+
+
 }

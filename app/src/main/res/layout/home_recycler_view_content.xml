@@ -28,12 +28,11 @@
     <LinearLayout
         android:id="@+id/text_container"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="88dp"
         android:orientation="horizontal"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/image_container"
-        android:background="#FFFFFF">
+        android:layout_toRightOf="@id/image_container">
 
         <TextView
             android:id="@+id/default_text"

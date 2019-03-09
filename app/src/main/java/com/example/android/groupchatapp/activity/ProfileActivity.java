@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -43,7 +45,7 @@ import retrofit2.Response;
 import android.support.v4.content.CursorLoader;
 
 public class ProfileActivity extends AppCompatActivity {
-    ImageView profile;
+    CircleImageView profile;
     EditText name, number;
     final static int GALLERY_REQUEST_CODE = 1;
     private static final int REQUEST_WRITE_PERMISSION =0;
@@ -60,8 +62,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Edit Profile");
 
-        profile = (ImageView) findViewById(R.id.profile);
+        profile = (CircleImageView) findViewById(R.id.profile);
         name = (EditText) findViewById(R.id.Name);
         number = (EditText) findViewById(R.id.phoneNumber);
         mController =(Controller) getApplicationContext();
@@ -217,6 +221,12 @@ public class ProfileActivity extends AppCompatActivity {
             cursor.close();
         }
         return result;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent =new Intent(getApplicationContext(),HomeActivity.class);
+        startActivityForResult(intent,0);
+        return true;
     }
 
     @Override

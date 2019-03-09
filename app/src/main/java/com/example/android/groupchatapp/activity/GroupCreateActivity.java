@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,6 +49,8 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         setContentView(R.layout.activity_group_create);
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Create Group");
         groupName = (EditText) findViewById(R.id.group_name);
         groupIcon = (CircleImageView) findViewById(R.id.group_profile);
         }
@@ -170,5 +173,11 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         finish();
         Intent intent = new Intent(GroupCreateActivity.this, HomeActivity.class);
         startActivity(intent);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent =new Intent(getApplicationContext(),HomeActivity.class);
+        startActivityForResult(intent,0);
+        return true;
     }
 }

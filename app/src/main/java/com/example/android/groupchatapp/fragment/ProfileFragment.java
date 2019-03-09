@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.android.groupchatapp.Controller;
 import com.example.android.groupchatapp.R;
+import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
 import com.example.android.groupchatapp.activity.ProfileActivity;
 import com.example.android.groupchatapp.activity.ProfileViewActivity;
@@ -34,6 +36,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -45,7 +48,7 @@ import retrofit2.Response;
 public class ProfileFragment extends Fragment {
 
     AppCompatActivity activity;
-    ImageView profile;
+    CircleImageView profile;
     EditText name, number;
     Button profile_button;
     final static int GALLERY_REQUEST_CODE = 1;
@@ -63,9 +66,10 @@ public class ProfileFragment extends Fragment {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setTitle("Profile");
 
-
-        profile = (ImageView) view.findViewById(R.id.profile);
+        profile = (CircleImageView) view.findViewById(R.id.profile);
         name = (EditText) view.findViewById(R.id.Name);
         number = (EditText) view.findViewById(R.id.phoneNumber);
         profile_button=(Button) view.findViewById(R.id.profile_button);
@@ -183,6 +187,13 @@ public class ProfileFragment extends Fragment {
         }
         return result;
     }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent =new Intent(activity.getApplicationContext(),HomeActivity.class);
+        startActivityForResult(intent,0);
+        return true;
+    }
+
 }
 
 /***

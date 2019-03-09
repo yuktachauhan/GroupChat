@@ -15,44 +15,68 @@
 
         <include layout="@layout/toolbar"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="20dp"
+            android:layout_width="130dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
             android:id="@+id/profile"
             android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center_horizontal" />
+
+        <android.support.v7.widget.CardView
+            android:layout_marginTop="20dp"
+            android:layout_width="340dp"
             android:layout_gravity="center_horizontal"
-            />
-
-
-        <EditText
-            android:id="@+id/Name"
-            android:hint="Name"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="25dp"
+            card_view:cardBackgroundColor="#00c6ff">
+            <EditText
+                android:id="@+id/Name"
+                android:layout_gravity="center_horizontal"
+                android:hint="Name"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                />
+        </android.support.v7.widget.CardView>
 
-        <EditText
-            android:id="@+id/phoneNumber"
-            android:hint="Contact Number"
-            android:layout_width="match_parent"
+        <android.support.v7.widget.CardView
+            android:layout_marginTop="20dp"
+            android:layout_width="340dp"
+            android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
-            />
-
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="25dp"
+            card_view:cardBackgroundColor="#00c6ff">
+            <EditText
+                android:id="@+id/phoneNumber"
+                android:hint="Contact Number"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                />
+        </android.support.v7.widget.CardView>
 
 
         <TextView
             android:id="@+id/Choose_profile"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choose Profile"
             android:textSize="18dp" />
 
+
         <Button
+            android:layout_marginTop="10dp"
             android:id="@+id/profile_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Browse" />
+            android:text="Browse"
+            android:background="#ffffff"/>
 
 
     </LinearLayout>

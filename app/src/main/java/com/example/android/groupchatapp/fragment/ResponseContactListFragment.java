@@ -1,5 +1,6 @@
 package com.example.android.groupchatapp.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -47,6 +49,9 @@ public class ResponseContactListFragment extends Fragment {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setTitle("Contacts");
+
         recyclerView =(RecyclerView) view.findViewById(R.id.recycler_response_contacts);
         contactListAdapter = new ContactListAdapter(ContactsActivity.getArrayList());
         contactListAdapter.setOnItemClickListener(new ContactListAdapter.ClickListener() {
@@ -109,4 +114,11 @@ public class ResponseContactListFragment extends Fragment {
             }
         });
     }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent =new Intent(activity.getApplicationContext(),HomeActivity.class);
+        startActivityForResult(intent,0);
+        return true;
+    }
+
 }

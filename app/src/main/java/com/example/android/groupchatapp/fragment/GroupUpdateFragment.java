@@ -9,16 +9,19 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.activity.FragmentContainerActivity;
+import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.rest.ApiClient;
@@ -26,6 +29,7 @@ import com.example.android.groupchatapp.rest.ApiInterface;
 
 import java.io.File;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -34,8 +38,9 @@ import retrofit2.Response;
 
 public class GroupUpdateFragment extends Fragment {
     private EditText group_name;
-    private ImageView group_image;
-    private Button group_update_button,group_profile_choose_button;
+    private CircleImageView group_image;
+    private Button group_update_button;
+    private TextView group_profile_choose_button;
     public static final int GALLERY_REQUEST_CODE=1;
     AppCompatActivity activity;
     Uri imageUri;
@@ -46,9 +51,11 @@ public class GroupUpdateFragment extends Fragment {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setTitle("Update Group");
 
         group_name =(EditText) view.findViewById(R.id.group_name);
-        group_image=(ImageView) view.findViewById(R.id.group_profile);
+        group_image=(CircleImageView) view.findViewById(R.id.group_profile);
         group_update_button=(Button) view.findViewById(R.id.group_profile_update_button);
         group_update_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +63,7 @@ public class GroupUpdateFragment extends Fragment {
                 groupUpdate();
             }
         });
-        group_profile_choose_button=(Button) view.findViewById(R.id.group_profile_choose_button);
+        group_profile_choose_button=(TextView) view.findViewById(R.id.group_profile_choose_button);
         group_profile_choose_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,4 +187,11 @@ public class GroupUpdateFragment extends Fragment {
         }
         return result;
     }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent =new Intent(activity.getApplicationContext(),HomeActivity.class);
+        startActivityForResult(intent,0);
+        return true;
+    }
+
 }
