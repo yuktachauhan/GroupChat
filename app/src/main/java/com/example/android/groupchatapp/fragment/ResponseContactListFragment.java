@@ -8,7 +8,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,11 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.groupchatapp.ContactListAdapter;
-import com.example.android.groupchatapp.GrouplistAdapter;
 import com.example.android.groupchatapp.R;
-import com.example.android.groupchatapp.activity.ContactsActivity;
-import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
+import com.example.android.groupchatapp.activity.MessageActivity;
 import com.example.android.groupchatapp.model.ModelMemberAdd;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
@@ -50,10 +47,10 @@ public class ResponseContactListFragment extends Fragment {
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setTitle("Contacts");
+        activity.getSupportActionBar().setTitle("Add Member List");
 
         recyclerView =(RecyclerView) view.findViewById(R.id.recycler_response_contacts);
-        contactListAdapter = new ContactListAdapter(ContactsActivity.getArrayList());
+        contactListAdapter = new ContactListAdapter(MessageActivity.getArrayList());
         contactListAdapter.setOnItemClickListener(new ContactListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -116,7 +113,7 @@ public class ResponseContactListFragment extends Fragment {
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent intent =new Intent(activity.getApplicationContext(),HomeActivity.class);
+        Intent intent =new Intent(activity.getApplicationContext(),MessageActivity.class);
         startActivityForResult(intent,0);
         return true;
     }

@@ -79,9 +79,15 @@ public interface ApiInterface {
     @PUT("api/groupprofile/{id}/add_member/")
     Call<ResponseBody> add_member(@Path("id") int id, @Body ModelMemberAdd modelMemberAdd, @Header("Authorization") String authHeader);
 
+    //Message Post
     @POST("group/{id}/")
     Call<ModelMessage> message(@Path("id") int id,@Body ModelMessage modelMessage,@Header("Authorization") String authHeader);
 
+    //Message get
     @GET("group/{id}/")
     Call<ArrayList<ModelMessage>> getmessage(@Path("id") int id,@Header("Authorization") String authHeader);
+
+    //delete member
+    @PUT("api/groupprofile/{id}/delete_member/")
+    Call<ResponseBody> deleteMember(@Path("id") int id, @Body ModelMemberAdd modelMemberAdd, @Header("Authorization") String authHeader);
 }
