@@ -44,14 +44,6 @@
             tools:text="Group_name"
             android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/default_group_id"
-            android:layout_width="wrap_content"
-            android:layout_height="18dp"
-            android:layout_gravity="center_vertical"
-            android:text="id"
-            android:layout_marginLeft="5dp"/>
-
     </LinearLayout>
 
 

@@ -62,6 +62,8 @@ public class HomeActivity extends AppCompatActivity {
     public static final String TAG ="HomeActivity";
     ArrayList<Integer> group_id_list;
     int id;
+    String groupName;
+    ArrayList<String> group_name_list;
     private  List<ArrayList<HashMap<String,String>>> memberList;
     private static ArrayList<HashMap<String,String>> member_list=new ArrayList<>();
 
@@ -145,6 +147,7 @@ public class HomeActivity extends AppCompatActivity {
     public void groupListShow(){
 
         group_id_list=new ArrayList<Integer>();
+        group_name_list=new ArrayList<>();
         memberList= new ArrayList<ArrayList<HashMap<String,String>>>();
 
         ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
@@ -160,8 +163,10 @@ public class HomeActivity extends AppCompatActivity {
                     for(int i=0;i<groupLists.size();i++){
                         ModelGroupList modelGroupList=groupLists.get(i);
                          id=modelGroupList.getId();
+                         groupName=modelGroupList.getName();
                          ArrayList<HashMap<String,String>> arrayList= (ArrayList<HashMap<String, String>>) modelGroupList.getMembers();
                         group_id_list.add(id);
+                        group_name_list.add(groupName);
                         memberList.add(arrayList);
                     }
                     recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
@@ -172,6 +177,7 @@ public class HomeActivity extends AppCompatActivity {
                             member_list=memberList.get(position);
                             Intent intent =new Intent(HomeActivity.this,MessageActivity.class);
                             intent.putExtra("group_id",group_id_list.get(position));
+                            intent.putExtra("group_name",group_name_list.get(position));
                             startActivity(intent);
                         }
 

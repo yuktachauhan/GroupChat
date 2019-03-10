@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.android.groupchatapp.R;
-import com.example.android.groupchatapp.fragment.DeleteMemberListFragment;
 import com.example.android.groupchatapp.fragment.FragmentViewGroupProfile;
 import com.example.android.groupchatapp.fragment.GroupUpdateFragment;
 import com.example.android.groupchatapp.fragment.MemberListFragment;
@@ -43,9 +42,6 @@ public class FragmentContainerActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new ResponseContactListFragment()).commit();
                 break;
 
-            case "deleteMemberFragment":
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new DeleteMemberListFragment()).commit();
-                break;
             case "memberList":
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new MemberListFragment()).commit();
                 break;

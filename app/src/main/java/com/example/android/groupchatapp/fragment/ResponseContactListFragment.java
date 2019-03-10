@@ -25,6 +25,7 @@ import com.example.android.groupchatapp.rest.ApiInterface;
 
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,6 +39,7 @@ public class ResponseContactListFragment extends Fragment {
     private HashMap<String,String> hashMap;
     public static final String TAG ="ResponseContactList";
     String name,phone;
+    CircleImageView add_button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,10 +49,17 @@ public class ResponseContactListFragment extends Fragment {
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setTitle("Add Member List");
-
+        activity.getSupportActionBar().setTitle("Add Members");
+        add_button=(CircleImageView) view.findViewById(R.id.image_button);
+        add_button.setImageResource(R.drawable.addmember);
+        add_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMember();
+            }
+        });
         recyclerView =(RecyclerView) view.findViewById(R.id.recycler_response_contacts);
-        contactListAdapter = new ContactListAdapter(MessageActivity.getArrayList());
+        contactListAdapter = new ContactListAdapter(LoginActivity.getArrayList());
         contactListAdapter.setOnItemClickListener(new ContactListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -63,13 +72,18 @@ public class ResponseContactListFragment extends Fragment {
 
                  hashMap=new HashMap<String, String>();
                  hashMap.put(name,phone);
-                 addMember();
 
             }
 
             @Override
             public void onItemLongClick(int position, View v) {
+                name = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).
+                        itemView.findViewById(R.id.default_text_member)).getText().toString();
+                phone =((TextView) recyclerView.findViewHolderForAdapterPosition(position).
+                        itemView.findViewById(R.id.default_text_number)).getText().toString();
 
+                hashMap=new HashMap<String, String>();
+                hashMap.put(name,phone);
             }
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity.getApplicationContext());

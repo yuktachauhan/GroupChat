@@ -51,6 +51,7 @@
         android:text="Create Group"
         android:background="#ffffff"
         android:textStyle="bold"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:onClick="createGroup"/>
 
 </LinearLayout>

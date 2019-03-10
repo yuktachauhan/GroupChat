@@ -51,6 +51,7 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Create Group");
+        groupName=(EditText) findViewById(R.id.group_name);
         }
 
     public void chooseProfile(View view){
@@ -122,7 +123,6 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
 
         String Name =groupName.getText().toString().trim();
         RequestBody my_name=RequestBody.create(MediaType.parse("text/plain"),Name);
-
         if(imageUri!=null) {
             File file = new File(getRealPathFromURI(imageUri));
             RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -137,9 +137,9 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
                 public void onResponse(Call<ModelGroupCreate> call, Response<ModelGroupCreate> response) {
                 progressDialog.dismiss();
                     if(response.isSuccessful()){
-                        Toast.makeText(GroupCreateActivity.this,"Successful",Toast.LENGTH_LONG).show();
-                        /*Intent intent = new Intent(GroupCreateActivity.this,ContactsActivity.class);
-                        startActivity(intent);*/
+                        Toast.makeText(GroupCreateActivity.this,"group created",Toast.LENGTH_LONG).show();
+                        Intent intent=new Intent(GroupCreateActivity.this,HomeActivity.class);
+                        startActivity(intent);
                     }
                 }
 
