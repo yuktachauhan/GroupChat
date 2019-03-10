@@ -51,8 +51,6 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Create Group");
-        groupName = (EditText) findViewById(R.id.group_name);
-        groupIcon = (CircleImageView) findViewById(R.id.group_profile);
         }
 
     public void chooseProfile(View view){
@@ -180,4 +178,5 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         startActivityForResult(intent,0);
         return true;
     }
+
 }

@@ -74,11 +74,6 @@ public class GroupUpdateFragment extends Fragment {
     }
 
 
-    /*@Override
-    public void onResume(){
-        super.onResume();
-        getProfile();
-    }*/
 
     public void groupProfile(){
         Intent pickImage = new Intent(Intent.ACTION_PICK);
@@ -116,7 +111,7 @@ public class GroupUpdateFragment extends Fragment {
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
 
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-        retrofit2.Call<ModelProfile> call=apiInterface.updateGroupProfile(5,fileToUpload,my_name,"JWT " + LoginActivity.getToken());
+        retrofit2.Call<ModelProfile> call=apiInterface.updateGroupProfile(1,fileToUpload,my_name,"JWT " + LoginActivity.getToken());
 
 
         call.enqueue(new Callback<ModelProfile>() {
@@ -124,10 +119,10 @@ public class GroupUpdateFragment extends Fragment {
             public void onResponse(retrofit2.Call<ModelProfile> call, Response<ModelProfile> response) {
                 progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    //Toast.makeText(activity,"Successful",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(activity,FragmentContainerActivity.class);
+                    Toast.makeText(activity,"Successful",Toast.LENGTH_SHORT).show();
+                   /* Intent intent = new Intent(activity,FragmentContainerActivity.class);
                     intent.putExtra("frag","group_update");
-                    startActivity(intent);
+                    startActivity(intent);*/
 
                 }else{
                     Toast.makeText(activity,"some error occurred",Toast.LENGTH_SHORT).show();
@@ -144,37 +139,7 @@ public class GroupUpdateFragment extends Fragment {
 
     }
     
-    
-   /* public void getProfile(){
-        final ProgressDialog progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-
-        ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-        Call<ModelProfile> call = apiInterface.groupProfile(5,"JWT " + LoginActivity.getToken());
-        call.enqueue(new Callback<ModelProfile>() {
-            @Override
-            public void onResponse(Call<ModelProfile> call, Response<ModelProfile> response) {
-                progressDialog.dismiss();
-                if (response.isSuccessful()) {
-                    String imageUrl = response.body().getAvatar();
-                    Picasso.with(activity).load(imageUrl).into(group_image);
-                    group_name.setText(response.body().getName());
-                }else{
-                    Toast.makeText(activity,"some error occurred",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ModelProfile> call, Throwable t) {
-                 progressDialog.dismiss();
-                Toast.makeText(activity,t.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        });
-        
-    }
-
-*/    private String getRealPathFromURI(Uri contentURI) {
+    private String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = activity.getContentResolver().query(contentURI, null, null, null, null);
         if (cursor == null) {

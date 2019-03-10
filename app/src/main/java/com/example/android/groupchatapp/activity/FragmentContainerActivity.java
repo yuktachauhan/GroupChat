@@ -32,11 +32,11 @@ public class FragmentContainerActivity extends AppCompatActivity {
                 break;
 
             case "group_update":
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new FragmentViewGroupProfile()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new GroupUpdateFragment()).commit();
                 break;
 
             case "view_group_profile":
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new GroupUpdateFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new FragmentViewGroupProfile()).commit();
                 break;
             case "responseContactList":
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new ResponseContactListFragment()).commit();
