@@ -36,20 +36,13 @@
 
     <TextView
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="30dp"
         android:id="@+id/group_profile_choose_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Choose Profile"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"/>
 
-    <Button
-        android:id="@+id/group_profile_update_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update Group"
-        android:onClick="createGroup"
-        android:background="#ffffff"
-        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

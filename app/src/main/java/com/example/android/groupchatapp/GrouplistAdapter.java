@@ -24,11 +24,13 @@ public class GrouplistAdapter extends RecyclerView.Adapter<GrouplistAdapter.MyVi
     private static ClickListener clickListener;
     private ArrayList<ModelGroupList> groupLists;
     private Context context;
+    public static int id;
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
         public TextView groupName,groupId;
         public CircleImageView groupImage;
+
 
         public MyViewHolder(View view){
             super(view);
@@ -71,14 +73,16 @@ public class GrouplistAdapter extends RecyclerView.Adapter<GrouplistAdapter.MyVi
 
        ModelGroupList modelGroupList=groupLists.get(i);
        String name=modelGroupList.getName();
-       int id=modelGroupList.getId();
+        id=modelGroupList.getId();
        String avatar=modelGroupList.getAvatar();
+       Log.i("avatar",avatar);
        myViewHolder.groupName.setText(name);
        myViewHolder.groupId.setText(id+"");
-       if(avatar!=null && !avatar.isEmpty()) {
-           Picasso.with(context).load(avatar).fit().placeholder(R.drawable.group).into(myViewHolder.groupImage);
-       }
+       Picasso.with(context).load(avatar).fit().placeholder(R.drawable.group).into(myViewHolder.groupImage);
+    }
 
+    public static int getId(){
+        return id;
     }
 
     @Override

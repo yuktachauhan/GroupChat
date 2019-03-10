@@ -23,9 +23,11 @@ import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.activity.FragmentContainerActivity;
 import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
+import com.example.android.groupchatapp.activity.MessageActivity;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -33,13 +35,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class GroupUpdateFragment extends Fragment {
     private EditText group_name;
     private CircleImageView group_image;
-    private Button group_update_button;
     private TextView group_profile_choose_button;
     public static final int GALLERY_REQUEST_CODE=1;
     AppCompatActivity activity;
@@ -53,16 +55,9 @@ public class GroupUpdateFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setTitle("Update Group");
-
+        getUpdatedGroupInfo();
         group_name =(EditText) view.findViewById(R.id.group_name);
         group_image=(CircleImageView) view.findViewById(R.id.group_profile);
-        group_update_button=(Button) view.findViewById(R.id.group_profile_update_button);
-        group_update_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                groupUpdate();
-            }
-        });
         group_profile_choose_button=(TextView) view.findViewById(R.id.group_profile_choose_button);
         group_profile_choose_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +106,7 @@ public class GroupUpdateFragment extends Fragment {
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
 
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-        retrofit2.Call<ModelProfile> call=apiInterface.updateGroupProfile(1,fileToUpload,my_name,"JWT " + LoginActivity.getToken());
+        retrofit2.Call<ModelProfile> call=apiInterface.updateGroupProfile(MessageActivity.getGroup_id(),fileToUpload,my_name,"JWT " + LoginActivity.getToken());
 
 
         call.enqueue(new Callback<ModelProfile>() {
@@ -119,11 +114,10 @@ public class GroupUpdateFragment extends Fragment {
             public void onResponse(retrofit2.Call<ModelProfile> call, Response<ModelProfile> response) {
                 progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    Toast.makeText(activity,"Successful",Toast.LENGTH_SHORT).show();
-                   /* Intent intent = new Intent(activity,FragmentContainerActivity.class);
-                    intent.putExtra("frag","group_update");
-                    startActivity(intent);*/
-
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container2,new FragmentViewGroupProfile())
+                            .commit();
                 }else{
                     Toast.makeText(activity,"some error occurred",Toast.LENGTH_SHORT).show();
                 }
@@ -152,6 +146,29 @@ public class GroupUpdateFragment extends Fragment {
         }
         return result;
     }
+
+    public void getUpdatedGroupInfo(){
+            ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
+
+            Call<ModelProfile> call =apiInterface.groupProfile(MessageActivity.getGroup_id(),"JWT " + LoginActivity.getToken());
+
+            call.enqueue(new Callback<ModelProfile>() {
+                @Override
+                public void onResponse(Call<ModelProfile> call, Response<ModelProfile> response) {
+                    if(response.isSuccessful()){
+                        String imageUrl=response.body().getAvatar();
+                        Picasso.with(activity).load(imageUrl).placeholder(R.drawable.group).into( group_image);
+                        group_name.setText(response.body().getName());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ModelProfile> call, Throwable t) {
+                    Toast.makeText(activity,t.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
 
     public boolean onOptionsItemSelected(MenuItem item){
         Intent intent =new Intent(activity.getApplicationContext(),HomeActivity.class);

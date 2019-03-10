@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.Image;
+import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -38,6 +39,7 @@ import com.example.android.groupchatapp.rest.ApiInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
@@ -58,8 +60,10 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GrouplistAdapter grouplistAdapter;
     public static final String TAG ="HomeActivity";
-    public static int group_id;
-
+    ArrayList<Integer> group_id_list;
+    int id;
+    private  List<ArrayList<HashMap<String,String>>> memberList;
+    private static ArrayList<HashMap<String,String>> member_list=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +144,9 @@ public class HomeActivity extends AppCompatActivity {
     //to show groups in recyclerview
     public void groupListShow(){
 
+        group_id_list=new ArrayList<Integer>();
+        memberList= new ArrayList<ArrayList<HashMap<String,String>>>();
+
         ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
 
         Call<ArrayList<ModelGroupList>> call =apiInterface.groupList("JWT " + LoginActivity.getToken());
@@ -150,16 +157,21 @@ public class HomeActivity extends AppCompatActivity {
 
                 if(response.isSuccessful()) {
                     groupLists=response.body();
+                    for(int i=0;i<groupLists.size();i++){
+                        ModelGroupList modelGroupList=groupLists.get(i);
+                         id=modelGroupList.getId();
+                         ArrayList<HashMap<String,String>> arrayList= (ArrayList<HashMap<String, String>>) modelGroupList.getMembers();
+                        group_id_list.add(id);
+                        memberList.add(arrayList);
+                    }
                     recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
                     grouplistAdapter = new GrouplistAdapter(HomeActivity.this,groupLists);
                     grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
                         @Override
                         public void onItemClick(int position, View v) {
-                            /*String groupId = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).
-                                    itemView.findViewById(R.id.default_group_id)).getText().toString().trim();
-                            group_id = Integer.parseInt(groupId);
-                            Log.i("GroupId",group_id+"");*/
+                            member_list=memberList.get(position);
                             Intent intent =new Intent(HomeActivity.this,MessageActivity.class);
+                            intent.putExtra("group_id",group_id_list.get(position));
                             startActivity(intent);
                         }
 
@@ -193,6 +205,10 @@ public class HomeActivity extends AppCompatActivity {
         grouplistAdapter.notifyDataSetChanged();
     }
 
+    //to send memberlist of a particular group to message activity
+    public static ArrayList<HashMap<String,String>> getMember_list(){
+        return member_list;
+    }
 
     //To open the navigation drawer when we click on the nav drawer button (three parallel lines)
     @Override

@@ -3,6 +3,7 @@ package com.example.android.groupchatapp.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ModelGroupList {
@@ -20,7 +21,7 @@ public class ModelGroupList {
     private int admin;
 
     @SerializedName("members")
-    public List<Integer> members = new ArrayList<Integer>();
+    public List<HashMap<String,String>> members = new ArrayList<HashMap<String, String>>();
 
     public void setId(int id){
         this.id=id;
@@ -38,7 +39,7 @@ public class ModelGroupList {
         this.admin = admin;
     }
 
-    public void setMembers(List<Integer> members) {
+    public void setMembers(List<HashMap<String,String>> members) {
         this.members = members;
     }
 
@@ -58,7 +59,7 @@ public class ModelGroupList {
         return admin;
     }
 
-    public List<Integer> getMembers() {
+    public List<HashMap<String,String>> getMembers() {
         return members;
     }
 }

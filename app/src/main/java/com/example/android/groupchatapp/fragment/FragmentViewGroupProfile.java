@@ -17,6 +17,7 @@ import com.example.android.groupchatapp.R;
 import com.example.android.groupchatapp.activity.FragmentContainerActivity;
 import com.example.android.groupchatapp.activity.HomeActivity;
 import com.example.android.groupchatapp.activity.LoginActivity;
+import com.example.android.groupchatapp.activity.MessageActivity;
 import com.example.android.groupchatapp.model.ModelProfile;
 import com.example.android.groupchatapp.rest.ApiClient;
 import com.example.android.groupchatapp.rest.ApiInterface;
@@ -51,7 +52,7 @@ public class FragmentViewGroupProfile extends Fragment {
     public void getProfile(){
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
 
-        Call<ModelProfile> call =apiInterface.groupProfile(1,"JWT " + LoginActivity.getToken());
+        Call<ModelProfile> call =apiInterface.groupProfile(MessageActivity.getGroup_id(),"JWT " + LoginActivity.getToken());
 
         call.enqueue(new Callback<ModelProfile>() {
             @Override
