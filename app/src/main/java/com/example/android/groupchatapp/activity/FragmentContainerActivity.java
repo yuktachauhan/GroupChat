@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.android.groupchatapp.R;
+import com.example.android.groupchatapp.fragment.ForgetEmail;
+import com.example.android.groupchatapp.fragment.FragmentVerificationOtp;
 import com.example.android.groupchatapp.fragment.FragmentViewGroupProfile;
 import com.example.android.groupchatapp.fragment.GroupUpdateFragment;
 import com.example.android.groupchatapp.fragment.MemberListFragment;
@@ -44,6 +46,12 @@ public class FragmentContainerActivity extends AppCompatActivity {
 
             case "memberList":
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new MemberListFragment()).commit();
+                break;
+            case "fragmentotp":
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new FragmentVerificationOtp()).commit();
+                break;
+            case "forgetEmail":
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container2,new ForgetEmail()).commit();
                 break;
         }
     }

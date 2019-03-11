@@ -2,6 +2,7 @@ package com.example.android.groupchatapp.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     CircleImageView profile;
     TextView name, number;
+    SharedPreferences sharedPreferences;
+    private String token;
+    private int userId;
 
 
     @Override
@@ -42,6 +46,10 @@ public class ProfileViewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("My Profile");
 
+        /*sharedPreferences= getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getInt("user_id",0);
+*/
         profile = (CircleImageView) findViewById(R.id.profile);
         name = (TextView) findViewById(R.id.Name);
         number = (TextView) findViewById(R.id.phoneNumber);

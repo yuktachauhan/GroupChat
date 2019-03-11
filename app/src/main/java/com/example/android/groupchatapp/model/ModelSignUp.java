@@ -16,6 +16,9 @@ public class ModelSignUp {
     @SerializedName("confirm_password")
     private String confirm_password;
 
+    @SerializedName("user_id")
+    private int user_id;
+
     public ModelSignUp(){}
 
     public ModelSignUp(String email,String username,String password,String confirm_password){
@@ -37,4 +40,7 @@ public class ModelSignUp {
      public String getConfirm_password(){
         return confirm_password;
      }
+    public int getUser_id(){
+        return user_id;
+    }
 }

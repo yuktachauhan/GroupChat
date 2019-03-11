@@ -1,9 +1,12 @@
 package com.example.android.groupchatapp.rest;
 
+import com.example.android.groupchatapp.model.ModelAddMemberListResponse;
+import com.example.android.groupchatapp.model.ModelForgetPassword;
 import com.example.android.groupchatapp.model.ModelGroupCreate;
 import com.example.android.groupchatapp.model.ModelGroupList;
 import com.example.android.groupchatapp.model.ModelMemberAdd;
 import com.example.android.groupchatapp.model.ModelMessage;
+import com.example.android.groupchatapp.model.ModelOtp;
 import com.example.android.groupchatapp.model.NumberListModel;
 import com.example.android.groupchatapp.model.ModelLogin;
 import com.example.android.groupchatapp.model.ModelProfile;
@@ -90,4 +93,17 @@ public interface ApiInterface {
     //delete member
     @PUT("api/groupprofile/{id}/delete_member/")
     Call<ResponseBody> deleteMember(@Path("id") int id, @Body ModelMemberAdd modelMemberAdd, @Header("Authorization") String authHeader);
+
+    @PUT("api/groupprofile/{id}/member_list/")
+    Call<ModelAddMemberListResponse> memberList(@Path("id") int id, @Body ModelAddMemberListResponse modelAddMemberListResponse
+            ,@Header("Authorization") String authHeader);
+
+    @POST("verify_otp/{id}/")
+    Call<ModelOtp> otpSend(@Path("id") int id,@Body ModelOtp modelOtp);
+
+    @POST("forget_password_otp/{id}/")
+    Call<ModelForgetPassword> forgetPwd(@Path("id") int id,@Body ModelForgetPassword modelForgetPassword);
+
+    @POST("forget_password_email/")
+    Call<ModelForgetPassword> forgetEmail(@Body ModelForgetPassword modelForgetPassword);
 }

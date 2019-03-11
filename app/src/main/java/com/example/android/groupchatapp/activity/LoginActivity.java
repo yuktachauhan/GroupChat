@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final int REQUEST_READ_CONTACTS=1;
     private static ArrayList<HashMap<String,String>> arrayList;  //for contacts
     HashMap<String,String> hashMap;//for sending all contacts
+    SharedPreferences sharedPreferences;
 
    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         username=(EditText) findViewById(R.id.username);
         password=(EditText) findViewById(R.id.password);
         mController=(Controller) getApplicationContext();
-
+       // sharedPreferences=getSharedPreferences("login",0);
     }
 
     public void doLogin(View view){
@@ -66,7 +67,11 @@ public class LoginActivity extends AppCompatActivity {
 
          user = username.getText().toString().trim();
          pwd = password.getText().toString().trim();
-
+         /*SharedPreferences.Editor editor=sharedPreferences.edit();
+         editor.putString("username",user);
+         editor.putString("password",pwd);
+         editor.apply();
+*/
          apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
 
         ModelLogin modelLogin = new ModelLogin(user,pwd);
@@ -80,6 +85,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<ModelLogin> call, Response<ModelLogin> response) {
                 progressDialog.dismiss();
                 if (response.isSuccessful()) {
+                    /*SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.putInt("user_id",response.body().getUser_id());
+                    editor.apply();*/
                     SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
                     SharedPreferences.Editor editor = myPref.edit();
                     editor.putInt("user_id", response.body().getUser_id()).commit();
@@ -122,7 +130,9 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 if(response.isSuccessful()) {
                    /* Toast.makeText(LoginActivity.this,response.body().getToken(), Toast.LENGTH_SHORT).show();*/
-
+                   /* SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.putString("token",response.body().getToken());
+                    editor.apply();*/
                     SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
                     SharedPreferences.Editor editor = myPref.edit();
                     editor.putString("token", response.body().getToken()).commit();
@@ -210,6 +220,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     arrayList=new ArrayList<HashMap<String, String>>();
                     arrayList=response.body().getContact();
+                    Toast.makeText(LoginActivity.this,arrayList+"",Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(LoginActivity.this,"Not Successful",Toast.LENGTH_SHORT).show();
                 }
@@ -248,6 +259,13 @@ public class LoginActivity extends AppCompatActivity {
             cursor.close();
         }
         return hashMap;
+    }
+
+    //forget password
+    public void forgetPassword(View v){
+        Intent intent=new Intent(LoginActivity.this,FragmentContainerActivity.class);
+        intent.putExtra("frag","forgetEmail");
+        startActivity(intent);
     }
 
     public void SignUpAct(View view){

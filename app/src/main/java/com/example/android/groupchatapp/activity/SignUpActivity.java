@@ -33,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
     private ApiInterface apiInterface;
     private String emailId,user,pwd,confirm;
     ProgressDialog progressDialog;
+    private static int user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,9 @@ public class SignUpActivity extends AppCompatActivity {
                progressDialog.dismiss();
                if (response.isSuccessful()){
                    Toast.makeText(SignUpActivity.this,"Confirm your email and login.",Toast.LENGTH_LONG).show();
-                   Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+                   user_id=response.body().getUser_id();
+                   Intent intent = new Intent(SignUpActivity.this,FragmentContainerActivity.class);
+                   intent.putExtra("frag","fragmentotp");
                    startActivity(intent);
            }
                else
@@ -108,6 +111,10 @@ public class SignUpActivity extends AppCompatActivity {
                Toast.makeText(SignUpActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
            }
        });
+    }
+
+    public static int getUser_id(){
+        return user_id;
     }
 
     public void login(View v){
