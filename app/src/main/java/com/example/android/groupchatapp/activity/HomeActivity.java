@@ -3,6 +3,8 @@ package com.example.android.groupchatapp.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -23,6 +25,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -66,6 +70,7 @@ public class HomeActivity extends AppCompatActivity {
     ArrayList<String> group_name_list;
     private  List<ArrayList<HashMap<String,String>>> memberList;
     private static ArrayList<HashMap<String,String>> member_list=new ArrayList<>();
+    String searchQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +212,97 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final android.support.v7.widget.SearchView searchView =
+                (android.support.v7.widget.SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                searchView.setQuery("", false);
+                searchQuery=query;
+                searchGroup();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+
+        });
+        return true;
+    }
+
+    public void searchGroup(){
+        group_id_list=new ArrayList<Integer>();
+        group_name_list=new ArrayList<>();
+        memberList= new ArrayList<ArrayList<HashMap<String,String>>>();
+
+        ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
+
+        Call<ArrayList<ModelGroupList>> call =apiInterface.groupListSearch(searchQuery,"JWT " + LoginActivity.getToken());
+
+        call.enqueue(new Callback<ArrayList<ModelGroupList>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ModelGroupList>> call, Response<ArrayList<ModelGroupList>> response) {
+
+                if(response.isSuccessful()) {
+                    groupLists=response.body();
+                    for(int i=0;i<groupLists.size();i++){
+                        ModelGroupList modelGroupList=groupLists.get(i);
+                        id=modelGroupList.getId();
+                        groupName=modelGroupList.getName();
+                        ArrayList<HashMap<String,String>> arrayList= (ArrayList<HashMap<String, String>>) modelGroupList.getMembers();
+                        group_id_list.add(id);
+                        group_name_list.add(groupName);
+                        memberList.add(arrayList);
+                    }
+                    recyclerView =(RecyclerView) findViewById(R.id.recycler_view);
+                    grouplistAdapter = new GrouplistAdapter(HomeActivity.this,groupLists);
+                    grouplistAdapter.setOnItemClickListener(new GrouplistAdapter.ClickListener() {
+                        @Override
+                        public void onItemClick(int position, View v) {
+                            member_list=memberList.get(position);
+                            Intent intent =new Intent(HomeActivity.this,MessageActivity.class);
+                            intent.putExtra("group_id",group_id_list.get(position));
+                            intent.putExtra("group_name",group_name_list.get(position));
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onItemLongClick(int position, View v) {
+
+                        }
+                    });
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.addItemDecoration(new DividerItemDecoration(HomeActivity.this, LinearLayoutManager.VERTICAL));
+                    recyclerView.setAdapter(grouplistAdapter);
+                    prepareGroupList();
+
+                }else{
+                    Toast.makeText(HomeActivity.this, "not successful", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ModelGroupList>> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public void prepareGroupList(){
         grouplistAdapter.notifyDataSetChanged();
     }
@@ -226,6 +322,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
     public void groupCreate(View view) {

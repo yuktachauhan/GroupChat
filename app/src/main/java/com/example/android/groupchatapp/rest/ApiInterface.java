@@ -28,6 +28,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 
 public interface ApiInterface {
@@ -112,4 +113,8 @@ public interface ApiInterface {
 
     @GET("resend_otp/{id}/")  //resend otp
     Call<ResponseBody> resendOtp(@Path("id") int id);
+
+    @GET("group/")
+    Call<ArrayList<ModelGroupList>> groupListSearch(@Query("search") String query, @Header("Authorization") String authHeader);
+
 }
