@@ -106,7 +106,8 @@ public class GroupUpdateFragment extends Fragment {
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
 
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-        retrofit2.Call<ModelProfile> call=apiInterface.updateGroupProfile(MessageActivity.getGroup_id(),fileToUpload,my_name,"JWT " + LoginActivity.getToken());
+        retrofit2.Call<ModelProfile> call=apiInterface.updateGroupProfile(MessageActivity.getGroup_id(),fileToUpload,my_name,
+                "JWT " + LoginActivity.getToken());
 
 
         call.enqueue(new Callback<ModelProfile>() {

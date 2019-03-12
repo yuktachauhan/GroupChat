@@ -15,6 +15,8 @@ public class ModelProfile {
     @SerializedName("avatar")
     private String avatar;
 
+   @SerializedName("admin")
+    private String admin;
 
     public ModelProfile(String name,String phone_number){
         this.name =name;
@@ -37,4 +39,6 @@ public class ModelProfile {
     public String getAvatar(){
         return avatar;
     }
+
+    public String getAdmin(){return admin;}
 }

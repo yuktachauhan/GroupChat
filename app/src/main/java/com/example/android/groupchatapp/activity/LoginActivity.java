@@ -220,7 +220,6 @@ public class LoginActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     arrayList=new ArrayList<HashMap<String, String>>();
                     arrayList=response.body().getContact();
-                    Toast.makeText(LoginActivity.this,arrayList+"",Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(LoginActivity.this,"Not Successful",Toast.LENGTH_SHORT).show();
                 }

@@ -106,4 +106,10 @@ public interface ApiInterface {
 
     @POST("forget_password_email/")
     Call<ModelForgetPassword> forgetEmail(@Body ModelForgetPassword modelForgetPassword);
+
+    @GET("exitgroup/{id}/") //group id
+    Call<ResponseBody> exitGroup(@Path("id") int id,@Header("Authorization") String authHeader);
+
+    @GET("resend_otp/{id}/")  //resend otp
+    Call<ResponseBody> resendOtp(@Path("id") int id);
 }

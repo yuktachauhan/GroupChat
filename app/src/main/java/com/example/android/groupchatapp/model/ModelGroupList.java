@@ -18,7 +18,7 @@ public class ModelGroupList {
     private String avatar;
 
     @SerializedName("admin")
-    private HashMap<Object,Object> admin=new HashMap<>();
+    private int admin;
 
     @SerializedName("members")
     public List<HashMap<String,String>> members = new ArrayList<HashMap<String,String>>();
@@ -35,7 +35,7 @@ public class ModelGroupList {
         this.avatar = avatar;
     }
 
-    public void setAdmin(HashMap<Object,Object> admin) {
+    public void setAdmin(int admin) {
         this.admin = admin;
     }
 
@@ -55,7 +55,7 @@ public class ModelGroupList {
         return avatar;
     }
 
-    public HashMap<Object, Object> getAdmin() {
+    public int getAdmin() {
         return admin;
     }
 
