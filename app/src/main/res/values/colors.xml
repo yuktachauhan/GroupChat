@@ -3,8 +3,4 @@
     <color name="colorPrimary">#a4ffff</color>
     <color name="colorPrimaryDark">#2ea4c7</color>
     <color name="colorAccent">#6dd5fa</color>
-    <color name="graylight">#fafafa</color>
-    <color name="startblue">#093edf</color>
-    <color name="endblue">#0bcce6</color>
-    <color name="primaryDark">#292b3d</color>
 </resources>

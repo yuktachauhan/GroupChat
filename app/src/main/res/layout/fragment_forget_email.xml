@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:focusableInTouchMode="true">
+
+    <EditText
+        android:id="@+id/forget_email"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:hint="enter email"
+        android:layout_marginLeft="30dp"/>
+
+    <Button
+        android:id="@+id/email_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="send"/>
+
+</LinearLayout>
