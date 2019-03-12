@@ -18,10 +18,10 @@ public class ModelGroupList {
     private String avatar;
 
     @SerializedName("admin")
-    private int admin;
+    private HashMap<Object,Object> admin=new HashMap<>();
 
     @SerializedName("members")
-    public List<HashMap<String,String>> members = new ArrayList<HashMap<String, String>>();
+    public List<HashMap<String,String>> members = new ArrayList<HashMap<String,String>>();
 
     public void setId(int id){
         this.id=id;
@@ -35,7 +35,7 @@ public class ModelGroupList {
         this.avatar = avatar;
     }
 
-    public void setAdmin(int admin) {
+    public void setAdmin(HashMap<Object,Object> admin) {
         this.admin = admin;
     }
 
@@ -55,7 +55,7 @@ public class ModelGroupList {
         return avatar;
     }
 
-    public int getAdmin() {
+    public HashMap<Object, Object> getAdmin() {
         return admin;
     }
 
