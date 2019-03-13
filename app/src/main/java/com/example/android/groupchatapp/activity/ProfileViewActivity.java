@@ -39,6 +39,9 @@ public class ProfileViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
+        sharedPreferences= getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getInt("user_id",0);
         getProfile();
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
@@ -46,10 +49,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("My Profile");
 
-        /*sharedPreferences= getSharedPreferences("login",0);
-        token=sharedPreferences.getString("token","");
-        userId=sharedPreferences.getInt("user_id",0);
-*/
+
         profile = (CircleImageView) findViewById(R.id.profile);
         name = (TextView) findViewById(R.id.Name);
         number = (TextView) findViewById(R.id.phoneNumber);
@@ -62,7 +62,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         ApiInterface apiInterface =ApiClient.ApiClient().create(ApiInterface.class);
 
-        Call<ModelProfile> call =apiInterface.getProfile(LoginActivity.getUser_id(),"JWT " + LoginActivity.getToken());
+        Call<ModelProfile> call =apiInterface.getProfile(userId,"JWT " +token);
 
         call.enqueue(new Callback<ModelProfile>() {
             @Override

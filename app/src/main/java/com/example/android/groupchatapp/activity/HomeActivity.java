@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.Image;
@@ -71,11 +72,17 @@ public class HomeActivity extends AppCompatActivity {
     private  List<ArrayList<HashMap<String,String>>> memberList;
     private static ArrayList<HashMap<String,String>> member_list=new ArrayList<>();
     String searchQuery;
+    SharedPreferences sharedPreferences;
+    private String token;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        sharedPreferences= getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getInt("user_id",0);
         groupListShow();
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -116,7 +123,7 @@ public class HomeActivity extends AppCompatActivity {
                     progressDialog.show();
 
                     ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-                    Call<ResponseBody> call =apiInterface.logOut("JWT " + LoginActivity.getToken());
+                    Call<ResponseBody> call =apiInterface.logOut("JWT " + token);
 
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
@@ -124,6 +131,9 @@ public class HomeActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             if (response.isSuccessful()) {
                                 Toast.makeText(HomeActivity.this, "Logout", Toast.LENGTH_SHORT).show();
+                                SharedPreferences.Editor editor=sharedPreferences.edit();
+                                editor.clear();
+                                editor.commit();
                                 Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             }else{
@@ -157,7 +167,7 @@ public class HomeActivity extends AppCompatActivity {
 
         ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
 
-        Call<ArrayList<ModelGroupList>> call =apiInterface.groupList("JWT " + LoginActivity.getToken());
+        Call<ArrayList<ModelGroupList>> call =apiInterface.groupList("JWT " + token);
 
         call.enqueue(new Callback<ArrayList<ModelGroupList>>() {
             @Override
@@ -250,7 +260,7 @@ public class HomeActivity extends AppCompatActivity {
 
         ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
 
-        Call<ArrayList<ModelGroupList>> call =apiInterface.groupListSearch(searchQuery,"JWT " + LoginActivity.getToken());
+        Call<ArrayList<ModelGroupList>> call =apiInterface.groupListSearch(searchQuery,"JWT " + token);
 
         call.enqueue(new Callback<ArrayList<ModelGroupList>>() {
             @Override

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -42,6 +43,9 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
     private static final int REQUEST_WRITE_PERMISSION =0;
     private final static int GALLERY_REQUEST_CODE = 1;
     private Uri imageUri;
+    SharedPreferences sharedPreferences;
+    private String token;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,9 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Create Group");
         groupName=(EditText) findViewById(R.id.group_name);
+        sharedPreferences= getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getInt("user_id",0);
         }
 
     public void chooseProfile(View view){
@@ -131,7 +138,7 @@ public class GroupCreateActivity extends AppCompatActivity implements ActivityCo
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
         ModelGroupCreate modelGroupCreate = new ModelGroupCreate(Name);
         //Call<ModelGroupCreate> call = apiInterface.createGroup(fileToUpload,my_name,"JWT " + LoginActivity.getToken());
-        Call<ModelGroupCreate> call = apiInterface.createGroup(modelGroupCreate,"JWT " + LoginActivity.getToken());
+        Call<ModelGroupCreate> call = apiInterface.createGroup(modelGroupCreate,"JWT " + token);
         call.enqueue(new Callback<ModelGroupCreate>() {
             @Override
                 public void onResponse(Call<ModelGroupCreate> call, Response<ModelGroupCreate> response) {

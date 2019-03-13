@@ -3,6 +3,7 @@ package com.example.android.groupchatapp.fragment;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -58,6 +59,9 @@ public class ProfileFragment extends Fragment {
     Controller mController;
     String Name,phoneNumber;
     ModelProfile modelProfile;
+    SharedPreferences sharedPreferences;
+    private String token;
+    private int userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +72,10 @@ public class ProfileFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setTitle("Profile");
+
+        sharedPreferences= activity.getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getInt("user_id",0);
 
         profile = (CircleImageView) view.findViewById(R.id.profile);
         name = (EditText) view.findViewById(R.id.Name);
@@ -150,9 +158,9 @@ public class ProfileFragment extends Fragment {
         modelProfile = new ModelProfile(Name, phoneNumber);
 
 
-        retrofit2.Call<ResponseBody> call = apiInterface.profile(LoginActivity.getUser_id(),
+        retrofit2.Call<ResponseBody> call = apiInterface.profile(userId,
                 fileToUpload, my_name,modelProfile.getPhone_number()
-                , "JWT " + LoginActivity.getToken());
+                , "JWT " +token);
 
 
         call.enqueue(new Callback<ResponseBody>() {

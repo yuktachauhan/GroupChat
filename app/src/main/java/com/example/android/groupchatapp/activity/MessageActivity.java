@@ -179,7 +179,7 @@ public class MessageActivity extends AppCompatActivity {
             progressDialog.show();
 
             ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-            Call<ResponseBody> call =apiInterface.exitGroup(group_id,"JWT "+LoginActivity.getToken());
+            Call<ResponseBody> call =apiInterface.exitGroup(group_id,"JWT "+token);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

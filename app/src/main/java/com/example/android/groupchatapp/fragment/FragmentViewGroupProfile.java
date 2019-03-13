@@ -1,6 +1,8 @@
 package com.example.android.groupchatapp.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -33,14 +35,18 @@ public class FragmentViewGroupProfile extends Fragment {
     AppCompatActivity activity;
     TextView group_name;
     CircleImageView group_image;
+    SharedPreferences sharedPreferences;
+    private String token;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_profile, container, false);
-
+        activity = (AppCompatActivity) getActivity();
+        sharedPreferences= activity.getSharedPreferences("login",Context.MODE_PRIVATE);
+        token=sharedPreferences.getString("token","");
         getProfile();
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
-        activity = (AppCompatActivity) getActivity();
+
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setTitle("My Profile");
@@ -52,7 +58,7 @@ public class FragmentViewGroupProfile extends Fragment {
     public void getProfile(){
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
 
-        Call<ModelProfile> call =apiInterface.groupProfile(MessageActivity.getGroup_id(),"JWT " + LoginActivity.getToken());
+        Call<ModelProfile> call =apiInterface.groupProfile(MessageActivity.getGroup_id(),"JWT " + token);
 
         call.enqueue(new Callback<ModelProfile>() {
             @Override

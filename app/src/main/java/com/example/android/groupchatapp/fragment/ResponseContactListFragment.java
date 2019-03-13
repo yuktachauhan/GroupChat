@@ -1,6 +1,7 @@
 package com.example.android.groupchatapp.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +46,9 @@ public class ResponseContactListFragment extends Fragment {
     ArrayList<HashMap<String,String>> memberList=new ArrayList<>();
     private HashMap<String,String> memberHashmap=new HashMap<>();
     ArrayList<HashMap<String,String>> responseMemberlist;
+    SharedPreferences sharedPreferences;
+    private String token;
+    private int userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +56,11 @@ public class ResponseContactListFragment extends Fragment {
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
+
+        sharedPreferences= activity.getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getInt("user_id",0);
+
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setTitle("Add Members");
@@ -81,7 +90,7 @@ public class ResponseContactListFragment extends Fragment {
         }
         ModelAddMemberListResponse modelAddMemberListResponse=new ModelAddMemberListResponse(memberHashmap);
         Call<ModelAddMemberListResponse> call =apiInterface.memberList(MessageActivity.getGroup_id(),modelAddMemberListResponse
-                ,"JWT "+LoginActivity.getToken());
+                ,"JWT "+token);
         call.enqueue(new Callback<ModelAddMemberListResponse>() {
             @Override
             public void onResponse(Call<ModelAddMemberListResponse> call, Response<ModelAddMemberListResponse> response) {
@@ -145,7 +154,7 @@ public class ResponseContactListFragment extends Fragment {
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
         ModelMemberAdd modelMemberAdd = new ModelMemberAdd(hashMap);
         Call<ResponseBody> call= apiInterface.add_member(MessageActivity.getGroup_id(),
-                modelMemberAdd,"JWT " + LoginActivity.getToken());
+                modelMemberAdd,"JWT " + token);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

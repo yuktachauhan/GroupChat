@@ -2,6 +2,7 @@ package com.example.android.groupchatapp.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,6 +47,9 @@ public class GroupUpdateFragment extends Fragment {
     public static final int GALLERY_REQUEST_CODE=1;
     AppCompatActivity activity;
     Uri imageUri;
+    SharedPreferences sharedPreferences;
+    private String token;
+    private int userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -55,6 +59,11 @@ public class GroupUpdateFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setTitle("Update Group");
+
+
+        sharedPreferences= activity.getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+
         getUpdatedGroupInfo();
         group_name =(EditText) view.findViewById(R.id.group_name);
         group_image=(CircleImageView) view.findViewById(R.id.group_profile);
@@ -107,7 +116,7 @@ public class GroupUpdateFragment extends Fragment {
 
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
         retrofit2.Call<ModelProfile> call=apiInterface.updateGroupProfile(MessageActivity.getGroup_id(),fileToUpload,my_name,
-                "JWT " + LoginActivity.getToken());
+                "JWT " + token);
 
 
         call.enqueue(new Callback<ModelProfile>() {
@@ -151,7 +160,7 @@ public class GroupUpdateFragment extends Fragment {
     public void getUpdatedGroupInfo(){
             ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
 
-            Call<ModelProfile> call =apiInterface.groupProfile(MessageActivity.getGroup_id(),"JWT " + LoginActivity.getToken());
+            Call<ModelProfile> call =apiInterface.groupProfile(MessageActivity.getGroup_id(),"JWT " +token);
 
             call.enqueue(new Callback<ModelProfile>() {
                 @Override

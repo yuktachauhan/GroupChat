@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         username=(EditText) findViewById(R.id.username);
         password=(EditText) findViewById(R.id.password);
         mController=(Controller) getApplicationContext();
-       // sharedPreferences=getSharedPreferences("login",0);
+        sharedPreferences=getSharedPreferences("login",0);
     }
 
     public void doLogin(View view){
@@ -67,11 +67,10 @@ public class LoginActivity extends AppCompatActivity {
 
          user = username.getText().toString().trim();
          pwd = password.getText().toString().trim();
-         /*SharedPreferences.Editor editor=sharedPreferences.edit();
+         SharedPreferences.Editor editor=sharedPreferences.edit();
          editor.putString("username",user);
          editor.putString("password",pwd);
          editor.apply();
-*/
          apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
 
         ModelLogin modelLogin = new ModelLogin(user,pwd);
@@ -85,13 +84,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<ModelLogin> call, Response<ModelLogin> response) {
                 progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    /*SharedPreferences.Editor editor=sharedPreferences.edit();
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
                     editor.putInt("user_id",response.body().getUser_id());
-                    editor.apply();*/
-                    SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
+                    editor.apply();
+                    /*SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
                     SharedPreferences.Editor editor = myPref.edit();
                     editor.putInt("user_id", response.body().getUser_id()).commit();
-                    user_id = myPref.getInt("user_id", response.body().getUser_id());
+                    user_id = myPref.getInt("user_id", response.body().getUser_id());*/
                     myToken();
 
                 }else{
@@ -108,9 +107,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public static int getUser_id(){
+   /* public static int getUser_id(){
         return user_id;
-    }
+    }*/
 
     public void myToken() {
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
@@ -130,14 +129,14 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 if(response.isSuccessful()) {
                    /* Toast.makeText(LoginActivity.this,response.body().getToken(), Toast.LENGTH_SHORT).show();*/
-                   /* SharedPreferences.Editor editor=sharedPreferences.edit();
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
                     editor.putString("token",response.body().getToken());
-                    editor.apply();*/
-                    SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
+                    editor.apply();
+                    /*SharedPreferences myPref = getApplicationContext().getSharedPreferences("my_pref", 0);  //0 means private mode
                     SharedPreferences.Editor editor = myPref.edit();
                     editor.putString("token", response.body().getToken()).commit();
 
-                    token = myPref.getString("token",response.body().getToken());
+                    token = myPref.getString("token",response.body().getToken());*/
                     accessContacts();
                     Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
                     startActivity(intent);
@@ -157,9 +156,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public static String getToken(){
+    /*public static String getToken(){
         return token;
-    }
+    }*/
 
     //access contacts permission and send contacts and show response contacts list
 
@@ -211,8 +210,8 @@ public class LoginActivity extends AppCompatActivity {
         ApiInterface apiInterface =ApiClient.ApiClient().create(ApiInterface.class);
 
         NumberListModel numberListModel = new NumberListModel();
-
-        Call<NumberListModel> call=apiInterface.createContactList(getAllContacts(),"JWT " + LoginActivity.getToken());
+        String token=sharedPreferences.getString("token","");
+        Call<NumberListModel> call=apiInterface.createContactList(getAllContacts(),"JWT " + token);
         call.enqueue(new Callback<NumberListModel>() {
             @Override
             public void onResponse(Call<NumberListModel> call, Response<NumberListModel> response) {

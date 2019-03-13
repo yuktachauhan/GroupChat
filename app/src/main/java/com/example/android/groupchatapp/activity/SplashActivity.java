@@ -27,17 +27,13 @@ public class SplashActivity extends AppCompatActivity {
     String username;
     String password;
     Controller mController;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-            }
-        }, 2000);
-        /*sharedPreferences = getSharedPreferences("login", 0);
+        sharedPreferences = getSharedPreferences("login", 0);
         username = sharedPreferences.getString("username", "");
         password = sharedPreferences.getString("password", "");
         mController = (Controller) getApplicationContext();
@@ -47,11 +43,15 @@ public class SplashActivity extends AppCompatActivity {
             login();
 
         } else {
-
-        }*/
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                }
+            }, 2000);
+        }
     }
 
-    /*public void login(){
+    public void login(){
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
 
         ModelLogin modelLogin = new ModelLogin(username, password);
@@ -93,6 +93,10 @@ public class SplashActivity extends AppCompatActivity {
             public void onResponse(Call<ModelToken> call, Response<ModelToken> response) {
 
                 if(response.isSuccessful()) {
+                    token=response.body().getToken();
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.putString("token",token);
+                    editor.apply();
                     Intent intent = new Intent(SplashActivity.this,HomeActivity.class);
                     startActivity(intent);
 
@@ -110,7 +114,6 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
     }
-*/
-}
 
+}
 

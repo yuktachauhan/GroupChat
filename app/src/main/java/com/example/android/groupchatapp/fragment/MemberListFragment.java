@@ -42,6 +42,10 @@ public class MemberListFragment extends Fragment {
     public static final String TAG ="MemberList";
     String name,phone;
     CircleImageView delete_button;
+    SharedPreferences sharedPreferences;
+    private String token;
+    private int userId;
+
 
 
     @Override
@@ -49,6 +53,11 @@ public class MemberListFragment extends Fragment {
         View view = inflater.inflate(R.layout.response_contactlist_fragment, container, false);
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
+
+        sharedPreferences= activity.getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getInt("user_id",0);
+
 
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -98,7 +107,7 @@ public class MemberListFragment extends Fragment {
         ApiInterface apiInterface = ApiClient.ApiClient().create(ApiInterface.class);
         ModelMemberAdd modelMemberAdd = new ModelMemberAdd(hashMap);
         Call<ResponseBody> call= apiInterface.deleteMember(MessageActivity.getGroup_id(),modelMemberAdd,"JWT "
-                + LoginActivity.getToken());
+                + token);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -3,6 +3,7 @@ package com.example.android.groupchatapp.activity;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -54,6 +55,9 @@ public class ProfileActivity extends AppCompatActivity {
     Controller mController;
     String Name,phoneNumber;
     ModelProfile modelProfile;
+    SharedPreferences sharedPreferences;
+    private String token;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,11 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Edit Profile");
+
+
+        sharedPreferences= getSharedPreferences("login",0);
+        token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getInt("user_id",0);
 
         profile = (CircleImageView) findViewById(R.id.profile);
         name = (EditText) findViewById(R.id.Name);
@@ -156,9 +165,9 @@ public class ProfileActivity extends AppCompatActivity {
             RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("avatar", file.getName(), mFile);
 
-            retrofit2.Call<ResponseBody> call = apiInterface.profile(LoginActivity.getUser_id(),
+            retrofit2.Call<ResponseBody> call = apiInterface.profile(userId,
                     fileToUpload, my_name,modelProfile.getPhone_number()
-                    , "JWT " + LoginActivity.getToken());
+                    , "JWT " + token);
 
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -184,7 +193,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         //when user does not choose any image
         else {
-        Call<ModelProfile> call=apiInterface.profileNoImg(LoginActivity.getUser_id(),modelProfile,"JWT " + LoginActivity.getToken());
+        Call<ModelProfile> call=apiInterface.profileNoImg(userId,modelProfile,"JWT " +token);
         call.enqueue(new Callback<ModelProfile>() {
             @Override
             public void onResponse(retrofit2.Call<ModelProfile> call, Response<ModelProfile> response) {

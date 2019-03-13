@@ -34,11 +34,13 @@ public class SignUpActivity extends AppCompatActivity {
     private String emailId,user,pwd,confirm;
     ProgressDialog progressDialog;
     private static int user_id;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        sharedPreferences=getSharedPreferences("signup",0);
         email=(EditText) findViewById(R.id.email);
         username=(EditText) findViewById(R.id.username);
         password=(EditText) findViewById(R.id.password);
@@ -97,6 +99,9 @@ public class SignUpActivity extends AppCompatActivity {
                if (response.isSuccessful()){
                    Toast.makeText(SignUpActivity.this,"Confirm your email and login.",Toast.LENGTH_LONG).show();
                    user_id=response.body().getUser_id();
+                   SharedPreferences.Editor editor=sharedPreferences.edit();
+                   editor.putInt("usersignupid",user_id);
+                   editor.apply();
                    Intent intent = new Intent(SignUpActivity.this,FragmentContainerActivity.class);
                    intent.putExtra("frag","fragmentotp");
                    startActivity(intent);
@@ -113,9 +118,9 @@ public class SignUpActivity extends AppCompatActivity {
        });
     }
 
-    public static int getUser_id(){
+  /* // public static int getUser_id(){
         return user_id;
-    }
+    }*/
 
     public void login(View v){
         Intent intent =new Intent(SignUpActivity.this,LoginActivity.class);

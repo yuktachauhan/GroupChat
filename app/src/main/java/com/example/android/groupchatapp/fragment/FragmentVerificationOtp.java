@@ -33,13 +33,16 @@ public class FragmentVerificationOtp extends Fragment {
     Button otp_send;
     TextView resend_otp;
     int otpNo;
+    SharedPreferences sharedPreferences;
+    int userId;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.otp_fragment_verification, container, false);
         activity = (AppCompatActivity) getActivity();
-
+        sharedPreferences=activity.getSharedPreferences("signup",0);
+        userId=sharedPreferences.getInt("usersignupid",0);
         otp_text=(EditText)view.findViewById(R.id.otp);
         otp_send=(Button) view.findViewById(R.id.otp_send);
         resend_otp=(TextView)view.findViewById(R.id.otp_resend);
@@ -70,7 +73,7 @@ public class FragmentVerificationOtp extends Fragment {
         }
         ModelOtp modelOtp=new ModelOtp(otpNo);
         ApiInterface apiInterface=ApiClient.ApiClient().create(ApiInterface.class);
-        Call<ModelOtp> call = apiInterface.otpSend(SignUpActivity.getUser_id(),modelOtp);
+        Call<ModelOtp> call = apiInterface.otpSend(userId,modelOtp);
         call.enqueue(new Callback<ModelOtp>() {
             @Override
             public void onResponse(Call<ModelOtp> call, Response<ModelOtp> response) {
@@ -98,7 +101,7 @@ public class FragmentVerificationOtp extends Fragment {
         progressDialog.show();
 
         ApiInterface apiInterface= ApiClient.ApiClient().create(ApiInterface.class);
-        Call<ResponseBody> call =apiInterface.resendOtp(SignUpActivity.getUser_id());
+        Call<ResponseBody> call =apiInterface.resendOtp(userId);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
